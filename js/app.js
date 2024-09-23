@@ -1,62 +1,32 @@
 document.addEventListener('DOMContentLoaded', () => {
-
-  // Base URL to be used for all navigation links
-  const baseUrl = '/WSOA3029A_2497147';
-
-  // Array of navigation items with title and URL
-  const navItems = [
+    console.log('DOM fully loaded and parsed');
+  
+    // Base URL to be used for all navigation links
+    const baseUrl = '';
+  
+    // Array of navigation items with title and URL
+    const navItems = [
       { title: "Home", url: `${baseUrl}/index.html` },
       { title: "Data", url: `${baseUrl}/pages/dataart/dataart.html` },
       { title: "Planning", url: `${baseUrl}/pages/planning/planning.html` },
       { title: "Theory Work", url: `${baseUrl}/pages/theory/theory.html` },
       { title: "Design", url: `${baseUrl}/pages/design/design.html` }
-  ];
-
-  // Generate the navbar dynamically and append it to the DOM
-  const navbar = document.querySelector('.navbar ul');
-  generateNavbar(navItems, navbar);
-});
-
-/**
- * Generates a navigation bar dynamically by appending items to the specified DOM element.
- * @param {Array} navItems - An array of objects containing `title` and `url` for navigation links.
- * @param {HTMLElement} navbarElement - The target DOM element (usually a <ul>) where the items will be appended.
- */
-function generateNavbar(navItems, navbarElement) {
-  if (!Array.isArray(navItems) || !navbarElement) {
-    console.error('Invalid arguments provided to generateNavbar');
-    return;
-  }
-
-  // Clear existing navbar content before appending new items
-  navbarElement.innerHTML = '';
-
-  navItems.forEach((item) => {
-    const li = document.createElement('li');
-    const a = document.createElement('a');
-    
-    a.href = item.url;
-    a.textContent = item.title;
-    
-    li.appendChild(a);
-    navbarElement.appendChild(li);
+    ];
+  
+    // Generate the navigation bar
+    const navBar = document.querySelector('.navbar ul');
+    navItems.forEach(item => {
+      console.log('Creating nav item:', item);
+      const listItem = document.createElement('li');
+      const link = document.createElement('a');
+      link.href = item.url;
+      link.textContent = item.title;
+      listItem.appendChild(link);
+      navBar.appendChild(listItem);
+    });
+  
+    console.log('Navbar appended to the body');
   });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  const navbar = document.querySelector('.navbar');
-
-  window.addEventListener('scroll', () => {
-      if (window.scrollY > 50) { // Adjust the value as needed
-          navbar.classList.add('scrolled');
-      } else {
-          navbar.classList.remove('scrolled');
-      }
-  });
-});
-
-
-
 
 //Back to Top Navigation 
 
