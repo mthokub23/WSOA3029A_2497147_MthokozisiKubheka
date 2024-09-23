@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded and parsed');
   
     // Base URL to be used for all navigation links
-    const baseUrl =  '/WSOA3029A_2497147_MthokozisiKubheka';
+    const baseUrl = '/WSOA3029A_2497147_MthokozisiKubheka';
   
     // Array of navigation items with title and URL
     const navItems = [
@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
       { title: "Theory Work", url: `${baseUrl}/pages/theory/theory.html` },
       { title: "Design", url: `${baseUrl}/pages/design/design.html` }
     ];
+  
   
     // Generate the navigation bar
     const navBar = document.querySelector('.navbar ul');
