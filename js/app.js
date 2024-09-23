@@ -13,46 +13,41 @@ document.addEventListener('DOMContentLoaded', () => {
       { title: "Design", url: `${baseUrl}/pages/design/design.html` }
     ];
   
-  
     // Generate the navigation bar
     const navBar = document.querySelector('.navbar ul');
-    navItems.forEach(item => {
-      console.log('Creating nav item:', item);
-      const listItem = document.createElement('li');
-      const link = document.createElement('a');
-      link.href = item.url;
-      link.textContent = item.title;
-      listItem.appendChild(link);
-      navBar.appendChild(listItem);
-    });
-  
-    console.log('Navbar appended to the body');
-  });
-
-//Back to Top Navigation 
-
-document.addEventListener('DOMContentLoaded', () => {
-  const backToTopButton = document.getElementById('back-to-top');
-
-  window.addEventListener('scroll', () => {
-      if (window.scrollY > 300) { // Show button after scrolling down 300px
-          backToTopButton.style.display = 'block';
-          backToTopButton.style.opacity = '1';
-      } else {
-          backToTopButton.style.opacity = '0';
-          setTimeout(() => {
-              backToTopButton.style.display = 'none';
-          }, 300); // Wait for the transition to complete
-      }
-  });
-
-  backToTopButton.addEventListener('click', () => {
-      window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
+    if (navBar) {
+      navItems.forEach(item => {
+        console.log('Creating nav item:', item);
+        const listItem = document.createElement('li');
+        const link = document.createElement('a');
+        link.href = item.url;
+        link.textContent = item.title;
+        listItem.appendChild(link);
+        navBar.appendChild(listItem);
       });
+      console.log('Navbar appended to the body');
+    } else {
+      console.error('Navbar element not found');
+    }
+  
+    // Back to Top Navigation
+    const backToTopButton = document.getElementById('back-to-top');
+    if (backToTopButton) {
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) { // Show button after scrolling down 300px
+          backToTopButton.style.display = 'block';
+        } else {
+          backToTopButton.style.display = 'none';
+        }
+      });
+  
+      backToTopButton.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    } else {
+      console.error('Back to top button not found');
+    }
   });
-});
 
 
 //Modal for interactive images
