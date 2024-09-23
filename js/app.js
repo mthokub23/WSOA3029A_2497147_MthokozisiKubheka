@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded and parsed');
   
     // Base URL to be used for all navigation links
-    const baseUrl = '';
+    const baseUrl = '/WSOA3029A_2497147_MthokozisiKubheka';
   
     // Array of navigation items with title and URL
     const navItems = [
