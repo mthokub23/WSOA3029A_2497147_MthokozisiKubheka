@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   // Base URL to be used for all navigation links
-  const baseUrl = '';
+  const baseUrl = '/WSOA3029A_2497147';
 
   // Array of navigation items with title and URL
   const navItems = [
