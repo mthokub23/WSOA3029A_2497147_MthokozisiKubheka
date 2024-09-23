@@ -1,0 +1,243 @@
+/* Universal Box Sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Body and Typography */
+body {
+  font-family: 'Roboto', sans-serif; /* Modern, readable font */
+  line-height: 1.6; /* Improve readability */
+  color: #ffffff; /* White text color */
+  background-color: #1e1e1e; /* Dark background for a gaming look */
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Full viewport height */
+}
+
+/* Back to Top Button */
+#back-to-top {
+    display: none; /* Hidden by default */
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    z-index: 1000;
+    background-color: #ffcc00;
+    color: #1e1e1e; /* Dark text for contrast */
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.5em;
+    cursor: pointer;
+    border-radius: 4px; /* Slight rounding for the button */
+    transition: opacity 0.3s ease; /* Smooth transition for visibility */
+}
+
+#back-to-top:hover {
+    background-color: #e6b800; /* Slightly darker on hover */
+}
+
+/* Links */
+a {
+  color: #ffcc00; /* Bright color for links */
+  text-decoration: none; /* No underline */
+  transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+a:hover {
+  color: #e6b800; /* Slightly darker on hover */
+}
+
+/* Images */
+img {
+  max-width: 100%; /* Responsive images */
+  height: auto; /* Maintain aspect ratio */
+}
+
+/* Utility Classes */
+.container {
+  max-width: 1200px; /* Max container width */
+  margin: 0 auto; /* Center align the container */
+  padding: 0 15px; /* Padding on smaller screens */
+}
+
+/* Hero Section */
+.hero {
+  background: url('path/to/hero-image.jpg') no-repeat center center/cover;
+  color: white;
+  text-align: center;
+  padding: 100px 20px;
+}
+
+.hero-content h1 {
+  font-size: 3em;
+  margin-bottom: 20px;
+}
+
+.hero-content p {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+}
+
+.hero-content button {
+  background-color: #ffcc00; /* Bright color for buttons */
+  color: #1e1e1e; /* Dark text for contrast */
+  border: none;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  border-radius: 4px; /* Slight rounding for buttons */
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.hero-content button:hover {
+  background-color: #e6b800; /* Slightly darker on hover */
+}
+
+/* Featured News Section */
+.featured-news, .game-reviews, .forum-highlights {
+  padding: 50px 20px;
+  text-align: center;
+}
+
+.news-grid, .reviews-grid, .forum-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.news-article, .review-article, .forum-post {
+  background: #2e2e2e; /* Dark background for articles */
+  border: 1px solid #444; /* Border for articles */
+  padding: 20px;
+  width: 300px;
+  border-radius: 8px; /* Slight rounding for a modern look */
+}
+
+.news-article img, .review-article img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px; /* Slight rounding for images */
+}
+
+.news-article h3, .review-article h3, .forum-post h3 {
+  font-size: 1.5em;
+  margin: 10px 0;
+  color: #ffcc00; /* Bright color for headings */
+}
+
+.news-article p, .review-article p, .forum-post p {
+  font-size: 1em;
+  margin: 10px 0;
+  color: #cccccc; /* Light grey for paragraphs */
+}
+
+.news-article a, .review-article a, .forum-post a {
+  color: #ffcc00; /* Bright color for links */
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.news-article a:hover, .review-article a:hover, .forum-post a:hover {
+  color: #e6b800; /* Slightly darker on hover */
+}
+
+/* Footer Styling */
+footer {
+  background-color: #333; /* Dark background for footer */
+  padding: 20px 0;
+  text-align: center;
+  margin-top: auto;
+}
+
+footer p {
+  margin-bottom: 10px;
+  color: #ffffff; /* White text for footer */
+}
+
+.social-links a {
+  margin: 0 10px;
+  color: #cccccc; /* Light grey for social links */
+}
+
+.social-links a:hover {
+  color: #ffcc00; /* Bright color on hover */
+}
+
+
+
+/* Writing and Theory Sections */
+#writing {
+  background-color: #2e2e2e; /* Dark background for the section */
+  color: #ffffff; /* White text color */
+  padding: 40px;
+  border-radius: 8px; /* Slight rounding for a modern look */
+  margin: 20px auto;
+  max-width: 1200px; /* Center the section and limit its width */
+}
+
+#writing .sub-heading {
+  font-size: 2em;
+  color: #ffcc00; /* Bright color for subheadings */
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+#writing .content {
+  font-size: 1.2em;
+  line-height: 1.6;
+  color: #cccccc; /* Light grey for paragraphs */
+}
+
+#writing .content img {
+  max-width: 100px; /* Small size for images */
+  height: auto;
+  margin: 20px 0;
+  cursor: pointer; /* Indicate that the image is clickable */
+  border-radius: 4px; /* Slight rounding for images */
+  transition: transform 0.3s ease; /* Smooth transition for hover effect */
+}
+
+#writing .content img:hover {
+  transform: scale(1.1); /* Slightly enlarge on hover */
+}
+
+/* Modal for Enlarged Image */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.9); /* Black background with opacity */
+}
+
+.modal-content {
+  margin: 15% auto;
+  display: block;
+  max-width: 80%;
+  border-radius: 8px; /* Slight rounding for the modal */
+}
+
+.close {
+  position: absolute;
+  top: 20px;
+  right: 35px;
+  color: #ffffff;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: #ffcc00; /* Bright color on hover */
+  text-decoration: none;
+  cursor: pointer;
+}
