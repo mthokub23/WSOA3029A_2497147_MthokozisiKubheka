@@ -84,18 +84,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+
+
 //API Exploitation
 const apiKey = 'ce147b997cec44d7a97bf0d4a154f35c';
-const gamesUrl = `https://api.rawg.io/api/games?key=${apiKey}&dates=2024-01-01,2024-08-31&metacritic=80,100&ordering=-released&page_size=10`;
 
-async function fetchRecentGames() {
+// List of games to search for
+const gamesList = [
+    "Elden Ring: Shadow of the Erdtree",
+    "Astro Bot",
+    "Final Fantasy VII Rebirth",
+    "UFO 50",
+    "Animal Well",
+    "Satisfactory",
+    "Balatro",
+    "The Last of Us Part II Remastered",
+    "Thank Goodness You're Here!",
+    "Tekken 8",
+    "Destiny 2: The Final Shape",
+    "Tsukihime: A Piece of Blue Glass Moon",
+    "Horizon Forbidden West: Complete Edition",
+    "Like a Dragon: Infinite Wealth",
+    "Castlevania Dominus Collection"
+];
+
+// Fetch game data from RAWG API for each game in the list
+async function fetchGames() {
     try {
-        const response = await fetch(gamesUrl);
-        const data = await response.json();
-        if (data.results.length > 0) {
-            displayGames(data.results);  // Pass the game data to the D3.js function
+        const gamesData = [];
+        
+        // Loop through each game and fetch its data
+        for (const gameName of gamesList) {
+            const searchUrl = `https://api.rawg.io/api/games?key=${apiKey}&search=${encodeURIComponent(gameName)}`;
+            const response = await fetch(searchUrl);
+            const data = await response.json();
+            
+            // If the game is found, push its data
+            if (data.results && data.results.length > 0) {
+                gamesData.push(data.results[0]); // Get the first result for the game
+            } else {
+                console.log(`Game not found: ${gameName}`);
+            }
+        }
+
+        // Display the games in the table
+        if (gamesData.length > 0) {
+            displayGames(gamesData);
         } else {
-            console.log('No games found in this time period with a Metacritic score above 80.');
+            console.log('No games found.');
         }
     } catch (error) {
         console.error('Error fetching games:', error);
@@ -104,21 +140,15 @@ async function fetchRecentGames() {
 
 // Function to dynamically create and style the table using D3.js
 function displayGames(games) {
-    // Clear existing content in case of re-rendering
+    // Clear any existing table content
     d3.select('#gamesTable').html('');
 
-    // Select the gamesTable div and append a table
-    const table = d3.select('#gamesTable')
-                    .append('table')
-                    .style('width', '100%')
-                    .style('border-collapse', 'collapse');
-
-    // Append the table headers (sortable)
-    const headers = ['Game Name', 'Release Date', 'Platforms', 'Metacritic Score'];
-    const thead = table.append('thead');
+    // Append table headers
+    const headers = ['Game Name', 'Release Date', 'Platforms', 'Metacritic Score', 'Genres'];
+    const thead = d3.select('#gamesTable').append('thead');
     const headerRow = thead.append('tr');
 
-    // Append headers and make them clickable for sorting
+    // Create headers and add sorting functionality
     headerRow.selectAll('th')
         .data(headers)
         .enter()
@@ -132,10 +162,10 @@ function displayGames(games) {
             sortTable(column);
         });
 
-    // Append the table body
-    const tbody = table.append('tbody');
+    // Create table body
+    const tbody = d3.select('#gamesTable').append('tbody');
 
-    // Populate the rows with game data
+    // Populate rows with game data
     const rows = tbody.selectAll('tr')
         .data(games)
         .enter()
@@ -148,26 +178,30 @@ function displayGames(games) {
             d3.select(this).style('background-color', 'white');
         });
 
-    // Append cells for each game with name, release date, platforms, and Metacritic score
+    // Game Name
     rows.append('td')
         .text(d => d.name)
-        .style('padding', '10px')
-        .style('border-bottom', '1px solid #ddd');
-    
+        .style('padding', '10px');
+
+    // Release Date
     rows.append('td')
-        .text(d => new Date(d.released).toLocaleDateString())  // Format the date
-        .style('padding', '10px')
-        .style('border-bottom', '1px solid #ddd');
-    
+        .text(d => new Date(d.released).toLocaleDateString())  // Format date to readable format
+        .style('padding', '10px');
+
+    // Platforms
     rows.append('td')
-        .text(d => d.platforms.map(p => p.platform.name).join(', '))
-        .style('padding', '10px')
-        .style('border-bottom', '1px solid #ddd');
-    
+        .text(d => d.platforms ? d.platforms.map(p => p.platform.name).join(', ') : 'N/A')  // Handle null/undefined platforms
+        .style('padding', '10px');
+
+    // Metacritic Score
     rows.append('td')
         .text(d => d.metacritic || 'N/A')  // Show Metacritic score or 'N/A' if missing
-        .style('padding', '10px')
-        .style('border-bottom', '1px solid #ddd');
+        .style('padding', '10px');
+
+    // Genres
+    rows.append('td')
+        .text(d => d.genres ? d.genres.map(g => g.name).join(', ') : 'N/A')  // Handle null/undefined genres
+        .style('padding', '10px');
 
     // Store current games data for sorting
     window.currentGames = games;
@@ -181,7 +215,7 @@ function sortTable(column) {
     
     // Sort games based on the clicked column
     let sortedData;
-    if (column === 'released') {
+    if (column === 'releasedate') {
         sortedData = window.currentGames.sort((a, b) => {
             const dateA = new Date(a.released);
             const dateB = new Date(b.released);
@@ -192,12 +226,6 @@ function sortTable(column) {
             return sortAscending
                 ? a.name.localeCompare(b.name)
                 : b.name.localeCompare(a.name);
-        });
-    } else if (column === 'metacriticscore') {
-        sortedData = window.currentGames.sort((a, b) => {
-            return sortAscending
-                ? (a.metacritic || 0) - (b.metacritic || 0)
-                : (b.metacritic || 0) - (a.metacritic || 0);
         });
     }
 
@@ -223,14 +251,10 @@ function sortTable(column) {
     // Re-populate cells
     rows.append('td').text(d => d.name).style('padding', '10px');
     rows.append('td').text(d => new Date(d.released).toLocaleDateString()).style('padding', '10px');
-    rows.append('td').text(d => d.platforms.map(p => p.platform.name).join(', ')).style('padding', '10px');
+    rows.append('td').text(d => d.platforms ? d.platforms.map(p => p.platform.name).join(', ') : 'N/A').style('padding', '10px');
     rows.append('td').text(d => d.metacritic || 'N/A').style('padding', '10px');
+    rows.append('td').text(d => d.genres ? d.genres.map(g => g.name).join(', ') : 'N/A').style('padding', '10px');
 }
 
-// Ensure D3.js is loaded before using it
-if (typeof d3 === 'undefined') {
-    console.error('D3.js is not loaded. Please include D3.js in your HTML file.');
-} else {
-    // Fetch and display games on page load
-    document.addEventListener('DOMContentLoaded', fetchRecentGames);
-}
+// Fetch and display games when the page loads
+document.addEventListener('DOMContentLoaded', fetchGames);
