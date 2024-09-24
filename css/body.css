@@ -177,6 +177,7 @@ footer p {
   border-radius: 8px; /* Slight rounding for a modern look */
   margin: 20px auto;
   max-width: 1200px; /* Center the section and limit its width */
+
 }
 
 #writing .sub-heading {
@@ -204,6 +205,8 @@ footer p {
 #writing .content img:hover {
   transform: scale(1.1); /* Slightly enlarge on hover */
 }
+
+
 
 /* Modal for Enlarged Image */
 .modal {
@@ -240,4 +243,50 @@ footer p {
   color: #ffcc00; /* Bright color on hover */
   text-decoration: none;
   cursor: pointer;
+}
+
+
+
+/* Table Styling */
+table {
+  width: 100%;
+  border-collapse: collapse; /* Ensure borders are collapsed */
+  background-color: #2e2e2e; /* Dark background for the table */
+  color: #ffffff; /* White text color */
+}
+
+th, td {
+  padding: 10px; /* Padding for table cells */
+  text-align: left; /* Left align text */
+  border-bottom: 1px solid #444; /* Bottom border for cells */
+}
+
+th {
+  background-color: #1e1e1e; /* Darker background for headers */
+  color: #ffcc00; /* Bright color for headers */
+  cursor: pointer; /* Pointer cursor for table headers */
+}
+
+td {
+  background-color: #2e2e2e; /* Dark background for table cells */
+  color: #cccccc; /* Light grey for table cell text */
+}
+
+th:hover, td:hover {
+  background-color: #3e3e3e; /* Slightly lighter background on hover */
+}
+
+tr:hover {
+  background-color: #444444; /* Slightly darker background for rows on hover */
+}
+
+/* Responsive table */
+@media (max-width: 600px) {
+  table {
+    font-size: 14px; /* Smaller font size for small screens */
+  }
+
+  th, td {
+    padding: 5px; /* Reduced padding for small screens */
+  }
 }
