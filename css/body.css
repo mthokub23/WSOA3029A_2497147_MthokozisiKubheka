@@ -170,7 +170,7 @@ footer p {
 
 
 /* Writing and Theory Sections */
-#writing {
+#content {
   background-color: #2e2e2e; /* Dark background for the section */
   color: #ffffff; /* White text color */
   padding: 40px;
@@ -180,20 +180,20 @@ footer p {
 
 }
 
-#writing .sub-heading {
+#content .sub-heading {
   font-size: 2em;
   color: #ffcc00; /* Bright color for subheadings */
   margin-bottom: 20px;
   text-align: center;
 }
 
-#writing .content {
+#content .content {
   font-size: 1.2em;
   line-height: 1.6;
   color: #cccccc; /* Light grey for paragraphs */
 }
 
-#writing .content img {
+#content .content img {
   max-width: 100px; /* Small size for images */
   height: auto;
   margin: 20px 0;
@@ -202,7 +202,7 @@ footer p {
   transition: transform 0.3s ease; /* Smooth transition for hover effect */
 }
 
-#writing .content img:hover {
+#content .content img:hover {
   transform: scale(1.1); /* Slightly enlarge on hover */
 }
 
@@ -247,46 +247,56 @@ footer p {
 
 
 
-/* Table Styling */
-table {
+.table {
   width: 100%;
-  border-collapse: collapse; /* Ensure borders are collapsed */
-  background-color: #2e2e2e; /* Dark background for the table */
-  color: #ffffff; /* White text color */
+  border-collapse: collapse;
+  margin-top: 20px; /* Add some space above the table */
+  background-color: #1e1e1e; /* Darker background for a sleek look */
+  color: #ffffff; /* White text for contrast */
+  border-radius: 8px; /* Slight rounding for modern look */
+  overflow: hidden; /* Ensure rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Add subtle shadow for depth */
 }
 
 th, td {
-  padding: 10px; /* Padding for table cells */
-  text-align: left; /* Left align text */
-  border-bottom: 1px solid #444; /* Bottom border for cells */
+  padding: 15px; /* Increase padding for better spacing */
+  text-align: left; /* Align text to the left for easier reading */
+  border-bottom: 1px solid #333; /* Darker border for a cleaner look */
 }
 
 th {
-  background-color: #1e1e1e; /* Darker background for headers */
-  color: #ffcc00; /* Bright color for headers */
-  cursor: pointer; /* Pointer cursor for table headers */
+  background-color: #282828; /* Dark background for headers */
+  color: #ffcc00; /* Bright color for header text */
+  font-weight: bold;
+  text-transform: uppercase; /* Uppercase for headers */
+  letter-spacing: 1px; /* Add some spacing to header letters */
+  cursor: pointer; /* Pointer cursor for interactivity */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
 }
 
 td {
-  background-color: #2e2e2e; /* Dark background for table cells */
-  color: #cccccc; /* Light grey for table cell text */
+  background-color: #1e1e1e; /* Darker background for table cells */
+  color: #cccccc; /* Softer light grey for text */
+  font-size: 0.9rem; /* Slightly smaller font size */
+  transition: background-color 0.3s ease; /* Smooth transition on hover */
 }
 
-th:hover, td:hover {
-  background-color: #3e3e3e; /* Slightly lighter background on hover */
+th:hover {
+  background-color: #ffcc00; /* Brighter hover effect for headers */
+  color: #1e1e1e; /* Dark text for contrast on hover */
 }
 
-tr:hover {
-  background-color: #444444; /* Slightly darker background for rows on hover */
+tr:hover td {
+  background-color: #333333; /* Slightly lighter background for rows on hover */
 }
 
-/* Responsive table */
+/* Responsive Table for Smaller Screens */
 @media (max-width: 600px) {
   table {
-    font-size: 14px; /* Smaller font size for small screens */
+    font-size: 0.85rem; /* Adjust font size for smaller screens */
   }
 
   th, td {
-    padding: 5px; /* Reduced padding for small screens */
+    padding: 10px; /* Adjust padding for smaller screens */
   }
 }

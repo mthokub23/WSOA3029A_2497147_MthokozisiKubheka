@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../../css/body.css">
     <link rel="stylesheet" href="../../css/main.css">
 </head>
-<body>
+<body data-page="theory">
     <header>
        
         <nav class="navbar"> 
@@ -17,13 +17,19 @@
     </header>
 
     <button id="back-to-top" title="Back to Top">↑</button>
+
+    
     <main>
+
         
 
+        <H1> Theory and Preparatory Work</H1>
+        <section class="content">
 
-        <section id="writing">
-                <article id="essay" class="content-section">
-                    <H2>Analysis of Bloombergs Billionaire Index </H2>
+            
+
+                <article id="essay">
+                    <h2>Analysis of Bloombergs Billionaire Index RE</h2>
                     <p>
                         Data is the new gold mine, but like any raw material, its value is only unlocked once processed through effective processing and presentation. Presenting the data visually meaningfully becomes essential in creating palatable and consumable products in data-driven journalism. This essay will examine Bloomberg's interactive article on the world's favorite people, billionaires, which employs rankings and personal profiles to convert financial data and personal profiles. The essay will explore how these techniques enhance the communication of data insights by analyzing the interplay of visual design, interactivity, and narrative elements.
                     </p>
@@ -80,8 +86,91 @@
 
                 <article id="weeklyupdates">
 
+                    <H2>Research and Prepatory Work</H2>
+
+                    <section>
+                        <h3>Design Thinking</h3>
+                        
+                        <ul>
+                            <li>
+                                Mailloux discusses how conventions are not static but dynamic and ever-evolving through context-specific interactions. He states that they’re shared practices that provide rules for the production and interpretation of texts within particular contexts (Mailloux, 1983, p.9). In our context, this relates to design conventions, such as UI patterns and models that guide both the designer’s creations and the user’s experience of digital platforms. He further discusses the role of context in shaping and redefining these conventions, noting that “the context of a convention includes its history, the social and political conditions of its usage, and the specific situation in which it's applied" (Mailloux, 1983, p.11).
+                            </li>
+                            
+                            <li>
+                                Papanek discusses what is design.
+                                <br>
+                                Gibson looks at the exploration of alternative interfaces in tech, particularly the shift from traditional setups to more sensory-focused interactions. He argues that certain approaches are invasive. One system he examines is Stelarc’s “Third Hand” system. Approaches that take advantage of human and machine connections to adapt to technological advancements remain niche due to their complexity. In contrast, the Martin Lighting Director utilizes sonar technology to track body movement within a space, creating a non-invasive interface, allowing the user to control multimedia elements through simple gestures. This system also has the added benefit of being adaptable across various applications from VR to gaming (Gibson, 2004).
+                            </li>
+                        </ul>
+            
+                        <p>
+                            With this in mind, the idea being spread by all three is that of user-friendly design, particularly non-traditional systems that take advantage of new conventions without being invasive or making it harder for the user. We want to note the ever-changing conventions as mentioned by Mailloux and design around similar patterns. For example, we don't want to trick users into following dark UI patterns.
+                        </p>
+            
+                    </section>
+            
+                    <section>
+                        <h4>Data-Driven Storytelling</h4>
+            
+                        <h5>Data Visualization on the Web</h5>
+            
+                        <p><strong>Big Data:</strong> Data that is a bit too large to properly understand. Creating a way to visualize and view it makes it far easier to comprehend.</p>
+            
+                        <p>Data representation and visualization make understanding data with context far easier. This is especially true when we see the different elements that influence the data.</p>
+            
+                        <h5>How Does This Relate to Web Development?</h5>
+            
+                        <p>We need to think about what we want the web to achieve. Clients and consumers want the web to be capable of doing everything. They expect all devices to offer a full feature set. That feature set can be taken advantage of using our HTML, JavaScript, and CSS toolkits.</p>
+            
+                        <p>How we represent data largely influences the user experience. We can sometimes "trick" users by communicating things that might not directly correlate, in order to create a narrative or fuel an agenda. We must be responsible in how we use data.</p>
+            
+                        <p>As with stories, most data visualization is narrative-driven. This is done with the intention of creating a certain "truth". The toolkit is important in helping us be more truthful.</p>
+                    </section>
 
 
+                    <section>
+
+                            <h4>APIs</h4>
+                            <p>APIs are sets of rules and protocols basically designed to allow different software components to communicate with each other. They define how requests and responses should be structured, enabling interaction between the applications or between different parts of the same application. Basically, smaller cogs in a system designed to communicate with the other parts to finish certain tasks.</p>
+                            
+                            Types of APIs
+                            <ul>
+                                <li><strong>Web APIs:</strong> Accessible over the web and are used to retrieve or send data to servers.</li>
+                                <li><strong>Library APIs:</strong> Allow developers to use pre-built functions to perform specific tasks.</li>
+                                <li><strong>OS APIs:</strong> They allow software to interact with the underlying OS.</li>
+                            </ul>
+                
+                            <h3>APIs in Visualization</h3>
+                            <p><strong>Restful APIs:</strong> Allow APIs to communicate with back-end servers using HTTP requests.</p>
+                            <p><strong>GraphQL APIs:</strong> Unlike REST, these allow you to query the exact points you need, unlike REST which needs multiple endpoints for different data needs. Useful for complex visualizations where different parts of the data model need to be queried dynamically.</p>
+                
+                            <h3>Library APIs for Data Manipulation and Visualization</h3>
+                            <ul>
+                                <li><strong>D3.js API:</strong> D3.js provides a comprehensive API that allows developers to bind data to the DOM and create complex visualizations using data-driven transformations. It includes methods for selecting elements (e.g., <code>d3.select()</code>), binding data, and applying scales, axes, and transitions to the visual elements.</li>
+                                <li><strong>Canvas and SVG APIs:</strong> Interact with the Canvas API or SVG API, depending on whether you’re using HTML5 Canvas or SVG to render visualizations.</li>
+                            </ul>
+                
+                            <h3>Principles to Keep in Mind</h3>
+                            <ul>
+                                <li><strong>Consistency:</strong> Keep everything consistent in naming conventions for methods and structuring data.</li>
+                                <li><strong>Abstraction:</strong> They abstract more complex operations into smaller, easier-to-use, manageable functions. D3.js does a lot of the complex aspects of DOM manipulation and data binding, allowing developers to focus on their design goals rather than the implementation.</li>
+                                <li><strong>Flexibility:</strong> Good APIs are flexible, giving developers the power to use them in a variety of contexts.</li>
+                            </ul>
+                
+                            <p><strong>Common APIs used with D3.js:</strong> Map APIs, Data APIs, and Visualization APIs. Keep security in mind as well—authentication is crucial because it ensures only authorized users can access the API. Always ensure the data itself is sanitized and validated to prevent security vulnerabilities like injection attacks.</p>
+                        
+                
+                            <h4>Knaflic (2015) - Choosing an Effective Visual (Chapter 2)</h4>
+                            <p>The chapter emphasizes the importance of choosing the correct visual to effectively communicate data, based on the context, of course. Knaflic stresses the importance of simplicity. Sometimes, it's better to use simple text because it’s more powerful than a graph when trying to be straightforward about the information we want to convey (Knaflic, 2015, p.19).</p>
+                
+                            <p><strong>Tables:</strong> are more important when the goal is to represent detailed information that the audience may need to reference or compare directly. They are well-suited for situations where precision is crucial because of their accuracy and the ability to see specific numbers and compare them across multiple dimensions. For example, financial reports or performance metrics, where accuracy down to the smallest decimal is important, can have huge implications if not done well. Knaflic also points out that tables "align more with our verbal system."</p>
+                
+                            <p><strong>Graphs:</strong> on the other hand, engage our visual system. They are great for creating perspective for the user (Knaflic, 2015, p.22). Graphs can also be absorbed quickly by looking at patterns. Tables should be kept minimalist and simple in design. The emphasis should be on the information itself rather than the grid lines and other decorative elements.</p>
+                
+                            <p><strong>Heatmaps:</strong> are a hybrid approach that combine the details of tables with visual cues from graphs, allowing for quicker identification of key data points. An example of their effectiveness is in football and sports analytics, where heatmaps are used to represent movement, performance, and areas of activity.</p>
+                        </section>
+
+                       
                     
                     
                     

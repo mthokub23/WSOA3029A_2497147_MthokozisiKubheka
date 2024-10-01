@@ -49,6 +49,67 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+// Define the sidebar content for different pages
+const sidebars = {
+    design: [
+        { id: 'ixdprocess', text: 'IxD Process' },
+        { id: 'uielements', text: 'UI Elements' },
+        { id: 'wireframes', text: 'Wireframes' },
+        { id: 'styles', text: 'Styles' }
+    ],
+    theory: [
+        { id: 'essay', text: 'Essay' },
+        { id: 'weeklyupdates', text: 'Weekly Updates' }
+    ]
+};
+
+// Function to generate the sidebar
+function generateSidebar(page) {
+    const sidebarContent = sidebars[page];
+    if (!sidebarContent) return;
+
+    const sidebar = document.createElement('aside');
+    sidebar.className = 'sidebar';
+
+    const nav = document.createElement('nav');
+    const ul = document.createElement('ul');
+
+    sidebarContent.forEach(item => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = 'javascript:void(0);';
+        a.textContent = item.text;
+        a.onclick = () => showSection(item.id);
+        li.appendChild(a);
+        ul.appendChild(li);
+    });
+
+    nav.appendChild(ul);
+    sidebar.appendChild(nav);
+
+    // Append the sidebar to the body or a specific container
+    document.body.appendChild(sidebar);
+}
+
+// Function to show the selected section
+function showSection(sectionId) {
+    // Hide all sections
+    document.querySelectorAll('article').forEach(section => {
+        section.style.display = 'none';
+    });
+
+    // Show the selected section
+    document.getElementById(sectionId).style.display = 'block';
+}
+
+// Example usage: Generate the sidebar for the 'design' page
+// You can call this function with the appropriate page context
+document.addEventListener('DOMContentLoaded', () => {
+    const page = document.body.dataset.page; // Assuming you set a data-page attribute on the body
+    generateSidebar(page);
+});
+
+
 
 //Modal for interactive images
 document.addEventListener('DOMContentLoaded', () => {
@@ -138,14 +199,19 @@ async function fetchGames() {
     }
 }
 
-// Function to dynamically create and style the table using D3.js
+/// Function to dynamically create and style the table using D3.js
 function displayGames(games) {
-    // Clear any existing table content
-    d3.select('#gamesTable').html('');
+    // Define the table headers
+    const headers = ['Game Name', 'Release Date', 'Platforms', 'Metacritic', 'Genres'];
 
-    // Append table headers
-    const headers = ['Game Name', 'Release Date', 'Platforms', 'Metacritic Score', 'Genres'];
-    const thead = d3.select('#gamesTable').append('thead');
+    // Create the table and append headers
+    const table = d3.select('#gamesTable')
+                    .append('table')
+                    .style('width', '100%')
+                    .style('border-collapse', 'collapse');
+
+    // Create the table header
+    const thead = table.append('thead');
     const headerRow = thead.append('tr');
 
     // Create headers and add sorting functionality
@@ -157,8 +223,8 @@ function displayGames(games) {
         .style('padding', '10px')
         .style('border-bottom', '1px solid #ddd')
         .style('cursor', 'pointer')
-        .on('click', function(d) {
-            const column = d.toLowerCase().replace(/\s+/g, ''); // Simplify column name
+        .on('click', function() {
+            const column = d3.select(this).text().toLowerCase().replace(/\s+/g, ''); // Simplify column name
             sortTable(column);
         });
 
@@ -226,6 +292,28 @@ function sortTable(column) {
             return sortAscending
                 ? a.name.localeCompare(b.name)
                 : b.name.localeCompare(a.name);
+        });
+    } else if (column === 'metacritic') {
+        sortedData = window.currentGames.sort((a, b) => {
+            return sortAscending
+                ? (a.metacritic || 0) - (b.metacritic || 0)  // Handle missing metacritic
+                : (b.metacritic || 0) - (a.metacritic || 0);
+        });
+    } else if (column === 'platforms') {
+        sortedData = window.currentGames.sort((a, b) => {
+            const platformsA = a.platforms ? a.platforms.map(p => p.platform.name).join(', ') : '';
+            const platformsB = b.platforms ? b.platforms.map(p => p.platform.name).join(', ') : '';
+            return sortAscending
+                ? platformsA.localeCompare(platformsB)
+                : platformsB.localeCompare(platformsA);
+        });
+    } else if (column === 'genres') {
+        sortedData = window.currentGames.sort((a, b) => {
+            const genresA = a.genres ? a.genres.map(g => g.name).join(', ') : '';
+            const genresB = b.genres ? b.genres.map(g => g.name).join(', ') : '';
+            return sortAscending
+                ? genresA.localeCompare(genresB)
+                : genresB.localeCompare(genresA);
         });
     }
 
