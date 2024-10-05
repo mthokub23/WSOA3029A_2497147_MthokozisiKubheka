@@ -7,16 +7,74 @@
 
 /* Body and Typography */
 body {
-  font-family: 'Roboto', sans-serif; /* Modern, readable font */
+  font-family: 'Roboto', sans-serif; 
   line-height: 1.6; /* Improve readability */
   color: #ffffff; /* White text color */
-  background-color: #1e1e1e; /* Dark background for a gaming look */
+  background-color: #1e1e1e; 
   padding: 0;
   margin: 0;
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Full viewport height */
+  min-height: 100vh;
 }
+
+
+/* Navbar Styles */
+.navbar {
+  background-color: #333; /* Dark background for navbar */
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+  position:sticky;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: rgba(51, 51, 51, 0.9); 
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+  z-index: 1000
+}
+
+.navbar.scrolled {
+  background-color: rgba(51, 51, 51, 0.5); 
+}
+
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  padding: 14px 20px;
+  display: block;
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.navbar a:hover {
+  background-color: #ffcc00; /* Bright color on hover */
+  color: #1e1e1e; /* Dark text on hover */
+}
+
+.navbar ul {
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  align-items: center;
+}
+
+.navbar li {
+  float: none;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .navbar a {
+      font-size: 0.9rem; /* Smaller font size for medium screens */
+      padding: 12px 15px; /* Adjust padding */
+  }
+}
+
 
 /* Back to Top Button */
 #back-to-top {
@@ -42,7 +100,7 @@ body {
 /* Links */
 a {
   color: #ffcc00; /* Bright color for links */
-  text-decoration: none; /* No underline */
+  text-decoration: none;
   transition: color 0.3s ease; /* Smooth transition for hover effect */
 }
 
@@ -63,87 +121,7 @@ img {
   padding: 0 15px; /* Padding on smaller screens */
 }
 
-/* Hero Section */
-.hero {
-  background: url('path/to/hero-image.jpg') no-repeat center center/cover;
-  color: white;
-  text-align: center;
-  padding: 100px 20px;
-}
 
-.hero-content h1 {
-  font-size: 3em;
-  margin-bottom: 20px;
-}
-
-.hero-content p {
-  font-size: 1.5em;
-  margin-bottom: 20px;
-}
-
-.hero-content button {
-  background-color: #ffcc00; /* Bright color for buttons */
-  color: #1e1e1e; /* Dark text for contrast */
-  border: none;
-  padding: 10px 20px;
-  font-size: 1em;
-  cursor: pointer;
-  border-radius: 4px; /* Slight rounding for buttons */
-  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
-}
-
-.hero-content button:hover {
-  background-color: #e6b800; /* Slightly darker on hover */
-}
-
-/* Featured News Section */
-.featured-news, .game-reviews, .forum-highlights {
-  padding: 50px 20px;
-  text-align: center;
-}
-
-.news-grid, .reviews-grid, .forum-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-}
-
-.news-article, .review-article, .forum-post {
-  background: #2e2e2e; /* Dark background for articles */
-  border: 1px solid #444; /* Border for articles */
-  padding: 20px;
-  width: 300px;
-  border-radius: 8px; /* Slight rounding for a modern look */
-}
-
-.news-article img, .review-article img {
-  width: 100%;
-  height: auto;
-  border-radius: 4px; /* Slight rounding for images */
-}
-
-.news-article h3, .review-article h3, .forum-post h3 {
-  font-size: 1.5em;
-  margin: 10px 0;
-  color: #ffcc00; /* Bright color for headings */
-}
-
-.news-article p, .review-article p, .forum-post p {
-  font-size: 1em;
-  margin: 10px 0;
-  color: #cccccc; /* Light grey for paragraphs */
-}
-
-.news-article a, .review-article a, .forum-post a {
-  color: #ffcc00; /* Bright color for links */
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.news-article a:hover, .review-article a:hover, .forum-post a:hover {
-  color: #e6b800; /* Slightly darker on hover */
-}
 
 /* Footer Styling */
 footer {
@@ -246,57 +224,3 @@ footer p {
 }
 
 
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px; /* Add some space above the table */
-  background-color: #1e1e1e; /* Darker background for a sleek look */
-  color: #ffffff; /* White text for contrast */
-  border-radius: 8px; /* Slight rounding for modern look */
-  overflow: hidden; /* Ensure rounded corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Add subtle shadow for depth */
-}
-
-th, td {
-  padding: 15px; /* Increase padding for better spacing */
-  text-align: left; /* Align text to the left for easier reading */
-  border-bottom: 1px solid #333; /* Darker border for a cleaner look */
-}
-
-th {
-  background-color: #282828; /* Dark background for headers */
-  color: #ffcc00; /* Bright color for header text */
-  font-weight: bold;
-  text-transform: uppercase; /* Uppercase for headers */
-  letter-spacing: 1px; /* Add some spacing to header letters */
-  cursor: pointer; /* Pointer cursor for interactivity */
-  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
-}
-
-td {
-  background-color: #1e1e1e; /* Darker background for table cells */
-  color: #cccccc; /* Softer light grey for text */
-  font-size: 0.9rem; /* Slightly smaller font size */
-  transition: background-color 0.3s ease; /* Smooth transition on hover */
-}
-
-th:hover {
-  background-color: #ffcc00; /* Brighter hover effect for headers */
-  color: #1e1e1e; /* Dark text for contrast on hover */
-}
-
-tr:hover td {
-  background-color: #333333; /* Slightly lighter background for rows on hover */
-}
-
-/* Responsive Table for Smaller Screens */
-@media (max-width: 600px) {
-  table {
-    font-size: 0.85rem; /* Adjust font size for smaller screens */
-  }
-
-  th, td {
-    padding: 10px; /* Adjust padding for smaller screens */
-  }
-}

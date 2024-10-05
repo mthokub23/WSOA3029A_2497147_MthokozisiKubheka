@@ -1,17 +1,16 @@
+/* Main Content Styling */
 main {
   margin: 20px auto;
   padding: 40px;
-  background-color: #1e1e1e; /* Dark background for a gaming look */
+  background-color: #1e1e1e; 
   color: #ffffff; /* White text for contrast */
-  box-shadow: none; /* Remove box shadow for a flat look */
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-family: 'Roboto', sans-serif;
-  max-width: 1200px; /* Center the main content and limit its width */
-  border-radius: 8px; /* Slight rounding for a modern look */
+  max-width: 1200px; 
+  border-radius: 8px; 
 }
 
 main h2, main h3 {
@@ -28,135 +27,151 @@ main p {
 main a {
   display: inline-block;
   background-color: #ffcc00; /* Bright color for buttons */
-  color: #1e1e1e; /* Dark text for contrast */
   text-decoration: none;
   padding: 10px 20px;
-  border-radius: 4px; /* Slight rounding for buttons */
+  border-radius: 4px; 
   margin: 10px 0;
-  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+  transition: background-color 0.3s ease;
 }
 
 main a:hover, main a:focus {
   background-color: #e6b800; /* Slightly darker on hover */
-  color: #1e1e1e;
 }
 
-/* Navbar Styles */
-.navbar {
-  background-color: #333; /* Dark background for navbar */
-  overflow: hidden;
+/* Card Grid Styling */
+.card-grid {
   display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
   justify-content: center;
-  align-items: center;
-  padding: 0 20px;
-  position:sticky;
-  position: sticky;
-  top: 0;
-  width: 100%;
-  background-color: rgba(51, 51, 51, 0.9); 
-  transition: background-color 0.3s ease, opacity 0.3s ease;
-  z-index: 1000
+  padding: 20px;
 }
 
-.navbar.scrolled {
-  background-color: rgba(51, 51, 51, 0.5); 
-}
-
-
-.navbar a {
-  color: white;
-  text-decoration: none;
-  padding: 14px 20px;
-  display: block;
-  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
-}
-
-.navbar a:hover {
-  background-color: #ffcc00; /* Bright color on hover */
-  color: #1e1e1e; /* Dark text on hover */
-}
-
-.navbar ul {
+/* Card Styling */
+.card {
   display: flex;
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #1e1e1e; 
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  width: 300px;
+  min-height: 400px; 
+  transition: transform 0.3s ease, box-shadow 0.3s ease; 
 }
 
-.navbar li {
-  float: none;
-  display: block;
+.card:hover {
+  transform: translateY(-5px); 
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); 
 }
 
-/* Hero section styling */
+.card img {
+  border-radius: 8px;
+  width: 100%;
+  height: 180px; 
+  object-fit: cover; 
+  margin-bottom: 15px;
+}
+
+.card h3 {
+  color: #ffcc00; 
+  font-size: 18px; 
+  margin: 15px 0 10px;
+}
+
+.card p {
+  color: #cccccc; 
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+.card a {
+  display: inline-block; 
+  background-color: #ffcc00; 
+  border: none;
+  border-radius: 4px;
+  color: #1e1e1e; 
+  padding: 10px 20px;
+  text-decoration: none;
+  margin-top: auto; 
+  transition: background-color 0.3s ease, transform 0.2s ease; 
+}
+
+.card a:hover {
+  background-color: #e6b800; 
+  transform: scale(1.05); 
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .card {
+    width: 100%; 
+    min-height: auto; 
+  }
+
+  .card-grid {
+    gap: 15px; 
+  }
+}
+
+/* Hero Section */
 .hero {
   position: relative;
   width: 100%;
-  height: 100vh; /* Full viewport height */
-  overflow: hidden;
+  height: 100vh;
+  background-image: url('../assets/images/hero.jpg');
+  background-size: cover; 
+  background-position: center; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white; 
+  margin: 0;
+  padding: 0;
 }
 
-.hero-video {
+.hero::before {
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Ensure the video covers the entire area */
-  z-index: -1; /* Place the video behind the content */
+  background-color: rgba(0, 0, 0, 0.5); 
+  z-index: 0; 
 }
 
 .hero-content {
   position: relative;
-  z-index: 1; /* Ensure the content is above the video */
-  color: white; /* Ensure the text is visible */
-  text-align: center;
-  top: 50%;
-  transform: translateY(-50%);
+  z-index: 1; 
+  padding: 20px;
 }
 
-.hero-content h1 {
+.hero h1 {
   font-size: 3em;
   margin-bottom: 0.5em;
 }
 
-.hero-content p {
+.hero p {
   font-size: 1.5em;
   margin-bottom: 1em;
 }
 
-.hero-content button {
+.hero button {
   padding: 0.5em 1em;
   font-size: 1em;
-  background-color: #ff6600;
-  color: white;
+  background-color: #ffcc00;
+  color: #1e1e1e;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.hero-content button:hover {
-  background-color: #ff4500;
-}
-
-
-@media screen and (max-width: 600px) {
-  .navbar a {
-      float: none;
-      display: block;
-      text-align: center;
-  }
-}
-
-
-
-article {
-  display: none; /* Hide all sections by default */
-}
-
-article #essay, article #ixdprocess {
-  display: block; /* Show the essay section by default */
+.hero button:hover {
+  background-color: #e6b800;
 }
 
 /* Sidebar Styles */
@@ -173,7 +188,7 @@ article #essay, article #ixdprocess {
 }
 
 .sidebar:hover {
-  opacity: 1; /* Fully visible on hover */
+  opacity: 1; 
 }
 
 .sidebar nav ul {
@@ -200,23 +215,245 @@ article #essay, article #ixdprocess {
   color: #1e1e1e;
 }
 
+/* Color Palette Style Guide */
+.color-palette {
+  margin: 20px auto;
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+  color: #ffffff;
+}
 
-/* Main content styling */
-.content {
-  margin-left: 250px; /* Add space to the left to account for the sidebar */
+.palette {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px; 
+  margin-top: 10px;
+}
+
+.color {
+  width: 100px; 
+  height: 100px; 
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative; 
+  transition: transform 0.3s; 
+}
+
+.color:hover {
+  transform: scale(1.1); 
+}
+
+.color-name {
+  position: absolute;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+/* Image Slideshow and Carousel Styling */
+.carousel-container {
+  position: relative;
+  max-width: 100%;
+  margin: auto;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.carousel-slide {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  width: 100%; 
+}
+
+.carousel-slide img {
+  width: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+  object-fit: cover; 
+}
+
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 12px;
+  color: white;
+  font-size: 24px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: none;
+  border-radius: 4px;
+  user-select: none;
+  z-index: 1000;
+  transition: background-color 0.3s ease;
+}
+
+.prev:hover, .next:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.prev {
+  left: 10px;
+}
+
+.next {
+  right: 10px;
+}
+
+/* Dots/Indicators */
+.carousel-dots {
+  text-align: center;
+  padding: 10px;
+}
+
+.dot {
+  cursor: pointer;
+  height: 15px;
+  width: 15px;
+  margin: 0 5px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+.dot.active {
+  background-color: #ffcc00; /* Active color */
+}
+
+/* Hide non-active images */
+.carousel-slide img {
+  display: none;
+}
+
+.carousel-slide img.active {
+  display: block;
+}
+
+/* Graph for Games */
+.graph {
+  margin: 20px;
   padding: 20px;
+  background-color: #2e2e2e; 
+  border-radius: 8px;
+  color: #ffffff; 
 }
 
-@media screen and (max-width: 768px) {
-  .sidebar {
-    position: relative;
-    width: 100%;
-    margin-bottom: 20px;
+/* General Table Styles */
+#gamesTable {
+  width: 100%; 
+  border-collapse: collapse; 
+  background-color: #2e2e2e; 
+  color: #ffffff; 
+  margin: 20px auto; 
+  max-width: 800px; 
+}
+
+/* Table Header Styles */
+#gamesTable th {
+  padding: 12px; 
+  background-color: #1e1e1e; 
+  color: #ffcc00; 
+  text-align: left; 
+  cursor: pointer; 
+  border-bottom: 2px solid #444; 
+}
+
+/* Table Data Styles */
+#gamesTable td {
+  padding: 10px; 
+  border-bottom: 1px solid #444; 
+  transition: background-color 0.3s, color 0.3s; 
+}
+
+/* Hover Effect for Table Rows */
+#gamesTable tr:hover {
+  background-color: #444; 
+}
+
+#gamesTable tr:hover td {
+  color: #ffffff; 
+}
+
+/* Screenshot Section Styles */
+.screenshot {
+  margin-top: 20px; 
+  text-align: center; 
+}
+
+.screenshot h4 {
+  color: #ffcc00; 
+  margin-bottom: 10px; 
+}
+
+#screenshotImage {
+  border-radius: 8px; 
+  margin-top: 10px; 
+  max-width: 100%; 
+  display: none; 
+}
+
+.default-image-message {
+  color: #cccccc; 
+  margin-top: 10px; 
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+  #gamesTable th, #gamesTable td {
+      padding: 8px; 
+      font-size: 14px; 
   }
 
-  .content {
-    margin-left: 0;
+  .screenshot h4 {
+      font-size: 1.2em; 
+  }
+
+  .hero {
+    height: auto; 
+    padding: 20px;
+  }
+
+  .hero h1 {
+    font-size: 2em;
+  }
+
+  .hero p {
+    font-size: 1.2em;
+  }
+
+  .hero button {
+    font-size: 0.9em;
+    padding: 0.4em 0.8em;
   }
 }
 
+/* Video Embed */
+.video-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px; 
+  margin: 20px auto; 
+  padding-top: 56.25%; /* 16:9 Aspect Ratio */
+  overflow: hidden; 
+}
 
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%; 
+  height: 100%; 
+  border: none; 
+}
+
+@media (max-width: 600px) {
+  .video-container {
+      max-width: 100%; 
+  }
+}
