@@ -540,6 +540,9 @@ main a:hover, main a:focus {
   margin: 20px auto; 
   padding-top: 56.25%; /* 16:9 Aspect Ratio */
   overflow: hidden; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .video-container iframe {
