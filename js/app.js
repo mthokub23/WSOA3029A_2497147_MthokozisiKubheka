@@ -1,52 +1,138 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded and parsed');
-  
-    // Base URL to be used for all navigation links
+
     const baseUrl = '/WSOA3029A_2497147_MthokozisiKubheka';
-  
-    // Array of navigation items with title and URL
     const navItems = [
-      { title: "Home", url: `${baseUrl}/index.html` },
-      { title: "Theory Work", url: `${baseUrl}/pages/theory/theory.html` },
-      { title: "Data", url: `${baseUrl}/pages/dataart/dataart.html` },
-      { title: "Design", url: `${baseUrl}/pages/design/design.html` }
+        { title: "Home", url: `${baseUrl}/index.html` },
+        { title: "Theory Work", url: `${baseUrl}/pages/theory/theory.html` },
+        { title: "Data", url: `${baseUrl}/pages/dataart/dataart.html` },
+        { title: "Design", url: `${baseUrl}/pages/design/design.html` }
     ];
-  
-    // Generate the navigation bar
+
+    generateNavBar(navItems);
+    handleBackToTopButton();
+    const page = document.body.dataset.page; // Assuming data-page is set on the body
+    generateSidebar(page);
+    setupImageModal();
+});
+
+// Generate the navigation bar
+function generateNavBar(navItems) {
     const navBar = document.querySelector('.navbar ul');
-    if (navBar) {
-      navItems.forEach(item => {
+    if (!navBar) {
+        console.error('Navbar element not found');
+        return;
+    }
+
+    navItems.forEach(item => {
         console.log('Creating nav item:', item);
-        const listItem = document.createElement('li');
-        const link = document.createElement('a');
-        link.href = item.url;
-        link.textContent = item.title;
-        listItem.appendChild(link);
+        const listItem = createNavItem(item);
         navBar.appendChild(listItem);
-      });
-      console.log('Navbar appended to the body');
-    } else {
-      console.error('Navbar element not found');
-    }
-  
-    // Back to Top Navigation
+    });
+
+    console.log('Navbar appended to the body');
+}
+
+// Create a navigation item
+function createNavItem({ title, url }) {
+    const listItem = document.createElement('li');
+    const link = document.createElement('a');
+    link.href = url;
+    link.textContent = title;
+    listItem.appendChild(link);
+    return listItem;
+}
+
+// Handle Back to Top button visibility and functionality
+function handleBackToTopButton() {
     const backToTopButton = document.getElementById('back-to-top');
-    if (backToTopButton) {
-      window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) { // Show button after scrolling down 300px
-          backToTopButton.style.display = 'block';
-        } else {
-          backToTopButton.style.display = 'none';
-        }
-      });
-  
-      backToTopButton.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-    } else {
-      console.error('Back to top button not found');
+    if (!backToTopButton) {
+        console.error('Back to top button not found');
+        return;
     }
-  });
+
+    window.addEventListener('scroll', () => {
+        backToTopButton.style.display = window.scrollY > 300 ? 'block' : 'none';
+    });
+
+    backToTopButton.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+}
+
+// Generate the sidebar based on the page type
+function generateSidebar(page) {
+    const sidebarContent = sidebars[page];
+    if (!sidebarContent) return;
+
+    const sidebar = document.createElement('aside');
+    sidebar.className = 'sidebar';
+    const nav = document.createElement('nav');
+    const ul = document.createElement('ul');
+
+    sidebarContent.forEach(item => {
+        const li = createSidebarItem(item);
+        ul.appendChild(li);
+    });
+
+    nav.appendChild(ul);
+    sidebar.appendChild(nav);
+    document.body.appendChild(sidebar);
+}
+
+// Create a sidebar item
+function createSidebarItem({ id, text }) {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = 'javascript:void(0);';
+    a.textContent = text;
+    a.onclick = () => showSection(id);
+    li.appendChild(a);
+    return li;
+}
+
+// Show the selected section and hide others
+function showSection(sectionId) {
+    document.querySelectorAll('article').forEach(section => {
+        section.style.display = 'none';
+    });
+    document.getElementById(sectionId).style.display = 'block';
+}
+
+// Set up modal for interactive images
+function setupImageModal() {
+    const images = document.querySelectorAll('.clickable-image');
+    const modal = createModal();
+    document.body.appendChild(modal);
+
+    images.forEach(image => {
+        image.addEventListener('click', () => {
+            modal.style.display = 'block';
+            modal.querySelector('#modal-image').src = image.src;
+        });
+    });
+
+    modal.querySelector('.close').addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+}
+
+// Create modal element
+function createModal() {
+    const modal = document.createElement('div');
+    modal.classList.add('modal');
+    modal.innerHTML = `
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modal-image">
+    `;
+    return modal;
+}
 
 // Define the sidebar content for different pages
 const sidebars = {
@@ -54,7 +140,6 @@ const sidebars = {
         { id: 'ixdprocess', text: 'IxD Process' },
         { id: 'uielements', text: 'UI Elements' },
         { id: 'wireframes', text: 'Wireframes' },
-        { id: 'styles', text: 'Styles' }
     ],
     theory: [
         { id: 'essay', text: 'Essay' },
@@ -62,86 +147,38 @@ const sidebars = {
     ]
 };
 
-// Function to generate the sidebar
-function generateSidebar(page) {
-    const sidebarContent = sidebars[page];
-    if (!sidebarContent) return;
 
-    const sidebar = document.createElement('aside');
-    sidebar.className = 'sidebar';
+// Carousel functionality
+let slideIndex = 1;
 
-    const nav = document.createElement('nav');
-    const ul = document.createElement('ul');
+function setupCarousel() {
+    showSlides(slideIndex);
 
-    sidebarContent.forEach(item => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = 'javascript:void(0);';
-        a.textContent = item.text;
-        a.onclick = () => showSection(item.id);
-        li.appendChild(a);
-        ul.appendChild(li);
+    document.querySelector('.prev').addEventListener('click', () => changeSlide(-1));
+    document.querySelector('.next').addEventListener('click', () => changeSlide(1));
+    document.querySelectorAll('.dot').forEach((dot, index) => {
+        dot.addEventListener('click', () => currentSlide(index + 1));
     });
-
-    nav.appendChild(ul);
-    sidebar.appendChild(nav);
-
-    // Append the sidebar to the body or a specific container
-    document.body.appendChild(sidebar);
 }
 
-// Function to show the selected section
-function showSection(sectionId) {
-    // Hide all sections
-    document.querySelectorAll('article').forEach(section => {
-        section.style.display = 'none';
-    });
-
-    // Show the selected section
-    document.getElementById(sectionId).style.display = 'block';
+function changeSlide(n) {
+    showSlides(slideIndex += n);
 }
 
+function currentSlide(n) {
+    showSlides(slideIndex = n);
+}
 
-document.addEventListener('DOMContentLoaded', () => {
-    const page = document.body.dataset.page; // Assuming you set a data-page attribute on the body
-    generateSidebar(page);
-});
+function showSlides(n) {
+    const slides = document.querySelectorAll('.carousel-slide img');
+    const dots = document.querySelectorAll('.dot');
 
+    if (n > slides.length) { slideIndex = 1 }
+    if (n < 1) { slideIndex = slides.length }
 
+    slides.forEach(slide => slide.style.display = 'none');
+    dots.forEach(dot => dot.className = dot.className.replace(' active', ''));
 
-//Modal for interactive images
-document.addEventListener('DOMContentLoaded', () => {
-  const images = document.querySelectorAll('.clickable-image');
-  const modal = document.createElement('div');
-  modal.classList.add('modal');
-  modal.innerHTML = `
-      <span class="close">&times;</span>
-      <img class="modal-content" id="modal-image">
-  `;
-  document.body.appendChild(modal);
-
-  const modalImage = document.getElementById('modal-image');
-  const closeModal = document.querySelector('.close');
-
-  images.forEach(image => {
-      image.addEventListener('click', () => {
-          modal.style.display = 'block';
-          modalImage.src = image.src;
-      });
-  });
-
-  closeModal.addEventListener('click', () => {
-      modal.style.display = 'none';
-  });
-
-  window.addEventListener('click', (event) => {
-      if (event.target === modal) {
-          modal.style.display = 'none';
-      }
-  });
-});
-
-
-
-
-
+    slides[slideIndex - 1].style.display = 'block';
+    dots[slideIndex - 1].className += ' active';
+}

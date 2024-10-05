@@ -215,6 +215,37 @@ main a:hover, main a:focus {
   color: #1e1e1e;
 }
 
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed; 
+    bottom: 0;
+    left: 50%; 
+    transform: translateX(-50%); 
+    width: 80%; 
+    padding: 10px; 
+    max-height: none; 
+    border-radius: 0; 
+  }
+
+  /* Adjust buttons in the sidebar for smaller screens */
+  .sidebar nav ul {
+    display: flex;
+    flex-direction: vertical; 
+    gap: 5px; 
+  }
+
+  .sidebar nav ul li a {
+    padding: 8px; 
+    font-size: 0.9rem; 
+  }
+
+  /* Ensure main content has margin to the left to avoid overlap */
+  main {
+    padding-bottom: 80px; 
+  }
+}
+
+
 /* Color Palette Style Guide */
 .color-palette {
   margin: 20px auto;
@@ -275,7 +306,13 @@ main a:hover, main a:focus {
   border-radius: 8px;
   cursor: pointer;
   object-fit: cover; 
-}
+  max-width: 100%;
+  max-height: 300px; 
+  object-fit: contain; 
+  margin: 0 auto;
+  display: block;
+
+
 
 .prev, .next {
   cursor: pointer;
@@ -335,6 +372,15 @@ main a:hover, main a:focus {
   display: block;
 }
 
+/* Modal Image Styles */
+.modal-image {
+  max-width: 90%;
+  max-height: 80vh; 
+  object-fit: contain;
+  margin: auto; 
+  display: block;
+}
+
 /* Graph for Games */
 .graph {
   margin: 20px;
@@ -344,40 +390,53 @@ main a:hover, main a:focus {
   color: #ffffff; 
 }
 
-/* General Table Styles */
+/.table-wrapper {
+  overflow-x: auto; /* Enables horizontal scrolling */
+  margin: 20px auto; /* Center the wrapper */
+}
+
 #gamesTable {
-  width: 100%; 
-  border-collapse: collapse; 
-  background-color: #2e2e2e; 
-  color: #ffffff; 
-  margin: 20px auto; 
-  max-width: 800px; 
+  width: 100%; /* Full width of the container */
+  border-collapse: collapse; /* Merge borders */
+  background-color: #2e2e2e; /* Dark background for the table */
+  color: #ffffff; /* White text for contrast */
+  margin: 20px auto; /* Center the table */
+  max-width: none; /* No max width to ensure it can expand */
 }
 
 /* Table Header Styles */
 #gamesTable th {
-  padding: 12px; 
-  background-color: #1e1e1e; 
-  color: #ffcc00; 
-  text-align: left; 
-  cursor: pointer; 
-  border-bottom: 2px solid #444; 
+  padding: 12px; /* Padding for header cells */
+  background-color: #1e1e1e; /* Darker background for headers */
+  color: #ffcc00; /* Bright color for headers */
+  text-align: left; /* Left-align text */
+  cursor: pointer; /* Pointer cursor for clickable headers */
+  border-bottom: 2px solid #444; /* Bottom border for header */
 }
 
 /* Table Data Styles */
 #gamesTable td {
-  padding: 10px; 
-  border-bottom: 1px solid #444; 
-  transition: background-color 0.3s, color 0.3s; 
+  padding: 10px; /* Padding for table cells */
+  border-bottom: 1px solid #444; /* Bottom border for cells */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
 }
 
 /* Hover Effect for Table Rows */
 #gamesTable tr:hover {
-  background-color: #444; 
+  background-color: #444; /* Darker shade for hover effect */
 }
 
+/* Ensure text color is white on hover */
 #gamesTable tr:hover td {
-  color: #ffffff; 
+  color: #ffffff; /* Ensure text remains white on hover */
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+  #gamesTable th, #gamesTable td {
+      padding: 8px; /* Reduced padding for smaller screens */
+      font-size: 14px; /* Smaller font size */
+  }
 }
 
 /* Screenshot Section Styles */
@@ -433,6 +492,46 @@ main a:hover, main a:focus {
   }
 }
 
+@media (max-width: 768px) {
+  .hero {
+      height: 70vh; /* Reduce height for smaller screens */
+      padding: 20px; /* Add padding for smaller screens */
+  }
+
+  .hero h1 {
+      font-size: 2.5em; /* Adjust heading size */
+  }
+
+  .hero p {
+      font-size: 1.2em; /* Adjust subtitle size */
+  }
+
+  .hero button {
+      font-size: 0.9em; /* Smaller button text */
+      padding: 0.4em 0.8em; /* Adjust button padding */
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+      height: 60vh; /* Further reduce height for very small screens */
+  }
+
+  .hero h1 {
+      font-size: 2em; /* Smaller heading for mobile */
+  }
+
+  .hero p {
+      font-size: 1em; /* Smaller subtitle for mobile */
+  }
+
+  .hero button {
+      font-size: 0.8em; /* Even smaller button text */
+      padding: 0.3em 0.6em; /* Adjust button padding for mobile */
+  }
+}
+
+
 /* Video Embed */
 .video-container {
   position: relative;
@@ -454,6 +553,19 @@ main a:hover, main a:focus {
 
 @media (max-width: 600px) {
   .video-container {
-      max-width: 100%; 
+      max-width: 100%; /* Allow full width on smaller screens */
+      padding-top: 56.25%; /* Maintain aspect ratio */
+  }
+
+  .video-container iframe {
+      /* Ensure iframe also scales well on smaller screens */
+      width: 100%; 
+      height: 100%; 
+  }
+}
+
+@media (max-width: 480px) {
+  .video-container {
+      padding-top: 75%; /* Adjust aspect ratio for very small screens */
   }
 }
