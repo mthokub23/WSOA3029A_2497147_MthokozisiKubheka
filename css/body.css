@@ -32,6 +32,22 @@ body {
   z-index: 1000;
 }
 
+.navbar .logo {
+  width: 50px; /* Adjust size as needed */
+  height: auto;
+  margin-right: auto; /* Pushes the logo to the farthest left */
+  vertical-align: left;
+}
+
+.navbar .logo img {
+  max-height: 50px; /* Adjust the height as needed */
+  width: auto; /* Maintain aspect ratio */
+  transition: transform 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.navbar .logo img:hover {
+  transform: scale(1.1); /* Slightly enlarge on hover */
+}
 .navbar.scrolled {
   background-color: rgba(51, 51, 51, 0.5); 
 }

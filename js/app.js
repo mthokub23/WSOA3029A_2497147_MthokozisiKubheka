@@ -9,25 +9,37 @@ document.addEventListener('DOMContentLoaded', () => {
         { title: "Design", url: `${baseUrl}/pages/design/design.html` }
     ];
 
+    addLogoToNavBar(baseUrl);
     generateNavBar(navItems);
     handleBackToTopButton();
     const page = document.body.dataset.page; // Assuming data-page is set on the body, as set for theory and design
     generateSidebar(page);
     setupImageModal();
 });
-// Add logo to the navbar
-const logoUrl = `${baseUrl}/images/logo.png`; 
-const logo = document.createElement('img');
-logo.src = logoUrl;
-logo.alt = 'Website Logo';
-logo.className = 'navbar-logo';
 
-const navBar = document.querySelector('.navbar');
-if (navBar) {
-    navBar.insertBefore(logo, navBar.firstChild);
-} else {
-    console.error('Navbar element not found');
+// Function to add logo to navbar
+function addLogoToNavBar(baseUrl) {
+    const navBar = document.querySelector('.navbar');
+    if (!navBar) {
+        console.error('Navbar element not found');
+        return;
+    }
+
+    // Create image element for the logo
+    const logo = document.createElement('img');
+    logo.src = `${baseUrl}/assets/images/logo.png`; 
+    logo.alt = "Company Logo";
+    logo.classList.add('logo'); // Optional: Add a CSS class for additional styling
+
+    // Wrap logo in a link to the homepage
+    const logoLink = document.createElement('a');
+    logoLink.href = `${baseUrl}/index.html`;
+    logoLink.appendChild(logo);
+
+    // Insert the logo link at the start of the navbar
+    navBar.insertBefore(logoLink, navBar.firstChild);
 }
+
 // Generate the navigation bar
 function generateNavBar(navItems) {
     const navBar = document.querySelector('.navbar ul');
