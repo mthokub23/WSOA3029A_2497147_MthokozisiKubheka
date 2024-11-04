@@ -11,11 +11,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     generateNavBar(navItems);
     handleBackToTopButton();
-    const page = document.body.dataset.page; // Assuming data-page is set on the body
+    const page = document.body.dataset.page; // Assuming data-page is set on the body, as set for theory and design
     generateSidebar(page);
     setupImageModal();
 });
+// Add logo to the navbar
+const logoUrl = `${baseUrl}/images/logo.png`; 
+const logo = document.createElement('img');
+logo.src = logoUrl;
+logo.alt = 'Website Logo';
+logo.className = 'navbar-logo';
 
+const navBar = document.querySelector('.navbar');
+if (navBar) {
+    navBar.insertBefore(logo, navBar.firstChild);
+} else {
+    console.error('Navbar element not found');
+}
 // Generate the navigation bar
 function generateNavBar(navItems) {
     const navBar = document.querySelector('.navbar ul');
