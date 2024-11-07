@@ -1,7 +1,8 @@
 //API Exploitation
 const apiKey = 'ce147b997cec44d7a97bf0d4a154f35c';
 
-/// List of games to search for
+
+// Games list to search for
 const gamesList = [
     "Elden Ring: Shadow of the Erdtree", "Astro Bot", "Final Fantasy VII Rebirth",
     "UFO 50", "Animal Well", "Satisfactory", "Balatro",
@@ -10,15 +11,7 @@ const gamesList = [
     "Horizon Forbidden West: Complete Edition", "Like a Dragon: Infinite Wealth", "Castlevania Dominus Collection"
 ];
 
-// Search Input Field for Filtering
-const filterInput = document.createElement('input');
-filterInput.placeholder = "Search by game name, platform, or genre...";
-filterInput.title = "Type here to filter games based on name, platform, or genre";
-filterInput.style.display = "block";
-filterInput.style.margin = "10px auto";
-filterInput.style.width = "50%";
-document.body.prepend(filterInput); // Add to the DOM
-filterInput.addEventListener("input", () => filterTable(filterInput.value, window.currentGames));
+let sortAscending = true; // Track the sort order for each column
 
 // Initial Game Data Fetching and Display
 async function fetchGames() {
@@ -121,19 +114,42 @@ function displayGames(games) {
         .append("title").text(d => `Genres: ${d.genres ? d.genres.map(g => g.name).join(', ') : 'N/A'}`);
 }
 
-// Filter Table Data
-function filterTable(query, games) {
-    if (!games) {
-        console.error("No games available to filter.");
+// Sorting Functionality
+function sortTable(column) {
+    if (!window.currentGames) {
+        console.error("No games available to sort.");
         return;
     }
-    
-    const filteredGames = games.filter(game => 
-        game.name.toLowerCase().includes(query.toLowerCase()) ||
-        (game.platforms && game.platforms.some(p => p.platform.name.toLowerCase().includes(query.toLowerCase()))) ||
-        (game.genres && game.genres.some(g => g.name.toLowerCase().includes(query.toLowerCase())))
-    );
-    displayGames(filteredGames);
+
+    const sortedData = [...window.currentGames].sort((a, b) => {
+        let valA, valB;
+
+        // Handle sorting by each specific column type
+        if (column === 'releasedate') {
+            valA = new Date(a.released || "1900-01-01");
+            valB = new Date(b.released || "1900-01-01");
+        } else if (column === 'gamename') {
+            valA = a.name || '';
+            valB = b.name || '';
+        } else if (column === 'metacritic') {
+            valA = a.metacritic ?? -1;
+            valB = b.metacritic ?? -1;
+        } else if (column === 'platforms') {
+            valA = a.platforms ? a.platforms.map(p => p.platform.name).join(', ') : '';
+            valB = b.platforms ? b.platforms.map(p => p.platform.name).join(', ') : '';
+        } else if (column === 'genres') {
+            valA = a.genres ? a.genres.map(g => g.name).join(', ') : '';
+            valB = b.genres ? b.genres.map(g => g.name).join(', ') : '';
+        }
+
+        // Perform comparison and handle undefined/null values safely
+        if (valA < valB) return sortAscending ? -1 : 1;
+        if (valA > valB) return sortAscending ? 1 : -1;
+        return 0;
+    });
+
+    sortAscending = !sortAscending;
+    displayGames(sortedData);
 }
 
 // Show Game Details and Screenshot
@@ -164,47 +180,11 @@ function showDefaultImage() {
     screenshotImage.style.display = 'block';
 }
 
-// Sorting Functionality
-let sortAscending = true;
-function sortTable(column) {
-    if (!window.currentGames) {
-        console.error("No games available to sort.");
-        return;
-    }
-
-    let sortedData;
-    if (column === 'releasedate') {
-        sortedData = window.currentGames.sort((a, b) => {
-            const dateA = new Date(a.released || "1900-01-01"); // default date if missing
-            const dateB = new Date(b.released || "1900-01-01");
-            return sortAscending ? dateA - dateB : dateB - dateA;
-        });
-    } else if (column === 'gamename') {
-        sortedData = window.currentGames.sort((a, b) => sortAscending ? (a.name || "").localeCompare(b.name || "") : (b.name || "").localeCompare(a.name || ""));
-    } else if (column === 'metacritic') {
-        sortedData = window.currentGames.sort((a, b) => sortAscending ? (a.metacritic || 0) - (b.metacritic || 0) : (b.metacritic || 0) - (a.metacritic || 0));
-    } else if (column === 'platforms') {
-        sortedData = window.currentGames.sort((a, b) => {
-            const platformsA = a.platforms ? a.platforms.map(p => p.platform.name).join(', ') : '';
-            const platformsB = b.platforms ? b.platforms.map(p => p.platform.name).join(', ') : '';
-            return sortAscending ? platformsA.localeCompare(platformsB) : platformsB.localeCompare(platformsA);
-        });
-    } else if (column === 'genres') {
-        sortedData = window.currentGames.sort((a, b) => {
-            const genresA = a.genres ? a.genres.map(g => g.name).join(', ') : '';
-            const genresB = b.genres ? b.genres.map(g => g.name).join(', ') : '';
-            return sortAscending ? genresA.localeCompare(genresB) : genresB.localeCompare(genresA);
-        });
-    }
-
-    sortAscending = !sortAscending;
-    displayGames(sortedData);
-}
-
 // Initial data fetch on load
 document.addEventListener('DOMContentLoaded', fetchGames);
 
 
+//Graph for Stealth vs RPG
 const year2024 = '2024';
 
 // 1. Fetch the list of tags and find the ID for the "stealth" and "RPG" tags

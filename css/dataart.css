@@ -13,42 +13,7 @@
   }
   
 
-  
-  #gamesTable {
-    width: 100%; /* Full width of the container */
-    border-collapse: collapse; /* Merge borders */
-    background-color: #2e2e2e; /* Dark background for the table */
-    color: #ffffff; /* White text for contrast */
-    margin: 20px auto; /* Center the table */
-    max-width: none; /* No max width to ensure it can expand */
-  }
-  
-  /* Table Header Styles */
-  #gamesTable th {
-    padding: 12px; /* Padding for header cells */
-    background-color: #1e1e1e; /* Darker background for headers */
-    color: #ffcc00; /* Bright color for headers */
-    text-align: left; /* Left-align text */
-    cursor: pointer; /* Pointer cursor for clickable headers */
-    border-bottom: 2px solid #444; /* Bottom border for header */
-  }
-  
-  /* Table Data Styles */
-  #gamesTable td {
-    padding: 10px; /* Padding for table cells */
-    border-bottom: 1px solid #444; /* Bottom border for cells */
-    transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
-  }
-  
-  /* Hover Effect for Table Rows */
-  #gamesTable tr:hover {
-    background-color: #444; /* Darker shade for hover effect */
-  }
-  
-  /* Ensure text color is white on hover */
-  #gamesTable tr:hover td {
-    color: #ffffff; /* Ensure text remains white on hover */
-  }
+ 
   
   /* Media Queries for Responsive Design */
   @media (max-width: 768px) {
@@ -348,4 +313,92 @@ circle:hover {
 
 .legend rect:hover {
     opacity: 0.7; /* Slightly fade on hover */
+}
+
+/*Table styles*/
+/* Table container to control width and center it */
+#gamesTable {
+  width: 90%;
+  max-width: 1200px;
+  margin: 20px auto;
+  overflow-x: auto; /* For smaller screens */
+}
+
+/* Main table styling */
+#gameDataTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  background-color: #2e2e2e; /* Dark background for table */
+  color: #000000; /* Light text color */
+}
+
+/* Header styling */
+#gameDataTable thead th {
+  background-color: #444444;
+  color: #ffcc00; /* Bright text for header */
+  padding: 12px;
+  text-align: left;
+  cursor: pointer;
+  font-weight: bold;
+  border-bottom: 2px solid #555555;
+}
+
+#gameDataTable thead th:hover {
+  background-color: #555555; /* Slightly lighter on hover */
+}
+
+/* Row styling */
+#gameDataTable tbody tr {
+  border-bottom: 1px solid #555555;
+  transition: background-color 0.3s ease; /* Smooth transition for hover */
+}
+
+/* Row hover effect */
+#gameDataTable tbody tr:hover {
+  background-color: #383838; /* Subtle color change for row hover */
+}
+
+/* Cell padding for better spacing */
+#gameDataTable tbody td {
+  padding: 10px;
+  font-size: 16px;
+}
+
+/* Game name link styling */
+#gameDataTable tbody td a {
+  color: #ffcc00; /* Link color */
+  text-decoration: none;
+  font-weight: bold;
+}
+
+#gameDataTable tbody td a:hover {
+  color: #ffcc00; /* Highlight color on hover */
+}
+
+/* Tooltip styling for better user experience */
+#gameDataTable tbody td[title] {
+  position: relative;
+  cursor: help;
+}
+
+#gameDataTable tbody td[title]::after {
+  content: attr(title);
+  position: absolute;
+  background-color: #333333;
+  color: #614646;
+  padding: 5px;
+  border-radius: 4px;
+  top: 120%; /* Position tooltip below */
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  font-size: 12px;
+}
+
+#gameDataTable tbody td[title]:hover::after {
+  opacity: 1; /* Show tooltip on hover */
 }
