@@ -3,69 +3,66 @@ const apiKey = 'ce147b997cec44d7a97bf0d4a154f35c';
 
 /// List of games to search for
 const gamesList = [
-    "Elden Ring: Shadow of the Erdtree",
-    "Astro Bot",
-    "Final Fantasy VII Rebirth",
-    "UFO 50",
-    "Animal Well",
-    "Satisfactory",
-    "Balatro",
-    "The Last of Us Part II Remastered",
-    "Thank Goodness You're Here!",
-    "Tekken 8",
-    "Destiny 2: The Final Shape",
-    "Tsukihime: A Piece of Blue Glass Moon",
-    "Horizon Forbidden West: Complete Edition",
-    "Like a Dragon: Infinite Wealth",
-    "Castlevania Dominus Collection"
+    "Elden Ring: Shadow of the Erdtree", "Astro Bot", "Final Fantasy VII Rebirth",
+    "UFO 50", "Animal Well", "Satisfactory", "Balatro",
+    "The Last of Us Part II Remastered", "Thank Goodness You're Here!",
+    "Tekken 8", "Destiny 2: The Final Shape", "Tsukihime: A Piece of Blue Glass Moon",
+    "Horizon Forbidden West: Complete Edition", "Like a Dragon: Infinite Wealth", "Castlevania Dominus Collection"
 ];
 
-// Fetch game data from RAWG API for each game in the list
+// Search Input Field for Filtering
+const filterInput = document.createElement('input');
+filterInput.placeholder = "Search by game name, platform, or genre...";
+filterInput.title = "Type here to filter games based on name, platform, or genre";
+filterInput.style.display = "block";
+filterInput.style.margin = "10px auto";
+filterInput.style.width = "50%";
+document.body.prepend(filterInput); // Add to the DOM
+filterInput.addEventListener("input", () => filterTable(filterInput.value, window.currentGames));
+
+// Initial Game Data Fetching and Display
 async function fetchGames() {
     try {
         const gamesData = [];
         
-        // Loop through each game and fetch its data
         for (const gameName of gamesList) {
             const searchUrl = `https://api.rawg.io/api/games?key=${apiKey}&search=${encodeURIComponent(gameName)}`;
             const response = await fetch(searchUrl);
             const data = await response.json();
             
-            // If the game is found, push its data
             if (data.results && data.results.length > 0) {
-                gamesData.push(data.results[0]); // Get the first result for the game
+                gamesData.push(data.results[0]); // Collect the top result for each game
             } else {
                 console.log(`Game not found: ${gameName}`);
             }
         }
 
-        // Display the games in the table
         if (gamesData.length > 0) {
             displayGames(gamesData);
+            window.currentGames = gamesData; // Store globally for filtering and sorting
         } else {
-            console.log('No games found.');
+            console.error("No games were found to display.");
         }
     } catch (error) {
         console.error('Error fetching games:', error);
     }
 }
 
-/// Function to dynamically create and style the table using D3.js
+// Display Games in a Table
 function displayGames(games) {
-    // Define the table headers
-    const headers = ['Game Name', 'Release Date', 'Platforms', 'Metacritic', 'Genres'];
+    d3.select('#gamesTable').html(""); // Clear existing content
 
-    // Create the table and append headers
+    const headers = ['Game Name', 'Release Date', 'Platforms', 'Metacritic', 'Genres'];
     const table = d3.select('#gamesTable')
                     .append('table')
-                    .style('width', '50%')
+                    .attr('id', 'gameDataTable')
+                    .style('width', '80%')
+                    .style('margin', '20px auto')
                     .style('border-collapse', 'collapse');
 
-    // Create the table header
+    // Table Headers with Tooltips and Sorting
     const thead = table.append('thead');
     const headerRow = thead.append('tr');
-
-    // Create headers and add sorting functionality
     headerRow.selectAll('th')
         .data(headers)
         .enter()
@@ -75,179 +72,137 @@ function displayGames(games) {
         .style('border-bottom', '1px solid #ddd')
         .style('cursor', 'pointer')
         .on('click', function() {
-            const column = d3.select(this).text().toLowerCase().replace(/\s+/g, ''); // Simplify column name
+            const column = d3.select(this).text().toLowerCase().replace(/\s+/g, '');
             sortTable(column);
-        });
+        })
+        .append("title").text(d => `Sort by ${d}`); // Add tooltips for sorting instructions
 
-    // Create table body
+    // Populate Table Rows with Data and Tooltips
     const tbody = table.append('tbody');
-
-    // Populate rows with game data
     const rows = tbody.selectAll('tr')
         .data(games)
         .enter()
         .append('tr')
         .style('border-bottom', '1px solid #ddd')
-        .on('mouseover', function() {
-            d3.select(this).style('background-color', '#e1e1e1');
-        })
-        .on('mouseout', function() {
-            d3.select(this).style('background-color', 'white');
-        });
+        .on('mouseover', function() { d3.select(this).style('background-color', '#f5f5f5'); })
+        .on('mouseout', function() { d3.select(this).style('background-color', 'white'); });
 
-    // Game Name (clickable)
+    // Game Name (Clickable for more details)
     rows.append('td')
-        .text(d => d.name)
+        .text(d => d.name || 'Unknown')
         .style('padding', '10px')
-        .style('color', '#ffcc00')  // Color to indicate it's clickable
-        .style('cursor', 'pointer')  // Indicate clickable
-        .on('click', function(event, d) {
-            fetchScreenshot(d.id);  // Fetch screenshot on click
-        });
+        .style('color', '#0073e6')
+        .style('cursor', 'pointer')
+        .on('click', (event, d) => showGameDetails(d.id))
+        .append("title").text(d => "Click to view screenshots and details");
 
-    // Release Date
+    // Release Date with Hover Info
     rows.append('td')
-        .text(d => new Date(d.released).toLocaleDateString())  // Format date to readable format
-        .style('padding', '10px');
+        .text(d => d.released ? new Date(d.released).toLocaleDateString() : 'N/A')
+        .style('padding', '10px')
+        .append("title").text(d => `Released on ${d.released ? new Date(d.released).toDateString() : 'Unknown'}`);
 
-    // Platforms
+    // Platforms with Tooltip
     rows.append('td')
-        .text(d => d.platforms ? d.platforms.map(p => p.platform.name).join(', ') : 'N/A')  // Handle null/undefined platforms
-        .style('padding', '10px');
+        .text(d => d.platforms ? d.platforms.map(p => p.platform.name).join(', ') : 'N/A')
+        .style('padding', '10px')
+        .append("title").text(d => `Available on: ${d.platforms ? d.platforms.map(p => p.platform.name).join(', ') : 'N/A'}`);
 
-    // Metacritic Score
+    // Metacritic Score with Tooltip
     rows.append('td')
-        .text(d => d.metacritic || 'N/A')  // Show Metacritic score or 'N/A' if missing
-        .style('padding', '10px');
+        .text(d => d.metacritic !== undefined ? d.metacritic : 'N/A')
+        .style('padding', '10px')
+        .append("title").text(d => `Metacritic score: ${d.metacritic !== undefined ? d.metacritic : 'N/A'}`);
 
-    // Genres
+    // Genres with Tooltip
     rows.append('td')
-        .text(d => d.genres ? d.genres.map(g => g.name).join(', ') : 'N/A')  // Handle null/undefined genres
-        .style('padding', '10px');
-
-    // Store current games data for sorting
-    window.currentGames = games;
+        .text(d => d.genres ? d.genres.map(g => g.name).join(', ') : 'N/A')
+        .style('padding', '10px')
+        .append("title").text(d => `Genres: ${d.genres ? d.genres.map(g => g.name).join(', ') : 'N/A'}`);
 }
 
-// Fetch screenshot for the selected game
-async function fetchScreenshot(gameId) {
+// Filter Table Data
+function filterTable(query, games) {
+    if (!games) {
+        console.error("No games available to filter.");
+        return;
+    }
+    
+    const filteredGames = games.filter(game => 
+        game.name.toLowerCase().includes(query.toLowerCase()) ||
+        (game.platforms && game.platforms.some(p => p.platform.name.toLowerCase().includes(query.toLowerCase()))) ||
+        (game.genres && game.genres.some(g => g.name.toLowerCase().includes(query.toLowerCase())))
+    );
+    displayGames(filteredGames);
+}
+
+// Show Game Details and Screenshot
+async function showGameDetails(gameId) {
     try {
-        // API endpoint for fetching screenshots
-        const screenshotUrl = `https://api.rawg.io/api/games/${gameId}/screenshots?key=${apiKey}&page_size=1`; // Get only the first screenshot
+        const screenshotUrl = `https://api.rawg.io/api/games/${gameId}/screenshots?key=${apiKey}&page_size=1`;
         const response = await fetch(screenshotUrl);
         const data = await response.json();
-
-        // Check if there are results for screenshots
+        const screenshotImage = document.getElementById('screenshotImage');
+        
         if (data.results && data.results.length > 0) {
-            // Take the first screenshot from the results
-            const screenshot = data.results[0].image;
-
-            // Display the screenshot in the img tag
-            const screenshotImage = document.getElementById('screenshotImage');
-            screenshotImage.src = screenshot;
-            screenshotImage.style.display = 'block'; // Show the image
+            screenshotImage.src = data.results[0].image;
+            screenshotImage.title = "Screenshot of selected game";
+            screenshotImage.style.display = 'block';
         } else {
-            // No screenshots found for the game, show a default message
-            console.log("No screenshots found for this game.");
-            showDefaultImage(); // Function to display default image/message
+            showDefaultImage();
         }
     } catch (error) {
-        // Error handling
         console.error("Error fetching screenshot:", error);
-        showDefaultImage(); // Fallback in case of an error
+        showDefaultImage();
     }
 }
 
-// Fallback function to handle when no screenshot is available or an error occurs
 function showDefaultImage() {
     const screenshotImage = document.getElementById('screenshotImage');
-    screenshotImage.src = 'assets/images/default-image.jpg';  // A default image
-    screenshotImage.style.display = 'block';  // Show the fallback image
+    screenshotImage.src = 'assets/images/default-image.jpg';
+    screenshotImage.title = "No screenshot available";
+    screenshotImage.style.display = 'block';
 }
 
-// Sorting function
+// Sorting Functionality
 let sortAscending = true;
-
 function sortTable(column) {
-    const tbody = d3.select('tbody');
-    
-    // Sort games based on the clicked column
+    if (!window.currentGames) {
+        console.error("No games available to sort.");
+        return;
+    }
+
     let sortedData;
     if (column === 'releasedate') {
         sortedData = window.currentGames.sort((a, b) => {
-            const dateA = new Date(a.released);
-            const dateB = new Date(b.released);
+            const dateA = new Date(a.released || "1900-01-01"); // default date if missing
+            const dateB = new Date(b.released || "1900-01-01");
             return sortAscending ? dateA - dateB : dateB - dateA;
         });
     } else if (column === 'gamename') {
-        sortedData = window.currentGames.sort((a, b) => {
-            return sortAscending
-                ? a.name.localeCompare(b.name)
-                : b.name.localeCompare(a.name);
-        });
+        sortedData = window.currentGames.sort((a, b) => sortAscending ? (a.name || "").localeCompare(b.name || "") : (b.name || "").localeCompare(a.name || ""));
     } else if (column === 'metacritic') {
-        sortedData = window.currentGames.sort((a, b) => {
-            return sortAscending
-                ? (a.metacritic || 0) - (b.metacritic || 0)  // Handle missing metacritic
-                : (b.metacritic || 0) - (a.metacritic || 0);
-        });
+        sortedData = window.currentGames.sort((a, b) => sortAscending ? (a.metacritic || 0) - (b.metacritic || 0) : (b.metacritic || 0) - (a.metacritic || 0));
     } else if (column === 'platforms') {
         sortedData = window.currentGames.sort((a, b) => {
             const platformsA = a.platforms ? a.platforms.map(p => p.platform.name).join(', ') : '';
             const platformsB = b.platforms ? b.platforms.map(p => p.platform.name).join(', ') : '';
-            return sortAscending
-                ? platformsA.localeCompare(platformsB)
-                : platformsB.localeCompare(platformsA);
+            return sortAscending ? platformsA.localeCompare(platformsB) : platformsB.localeCompare(platformsA);
         });
     } else if (column === 'genres') {
         sortedData = window.currentGames.sort((a, b) => {
             const genresA = a.genres ? a.genres.map(g => g.name).join(', ') : '';
             const genresB = b.genres ? b.genres.map(g => g.name).join(', ') : '';
-            return sortAscending
-                ? genresA.localeCompare(genresB)
-                : genresB.localeCompare(genresA);
+            return sortAscending ? genresA.localeCompare(genresB) : genresB.localeCompare(genresA);
         });
     }
 
-    // Toggle the sorting direction
     sortAscending = !sortAscending;
-
-    // Clear existing rows
-    tbody.selectAll('tr').remove();
-
-    // Re-populate rows with sorted data
-    const rows = tbody.selectAll('tr')
-        .data(sortedData)
-        .enter()
-        .append('tr')
-        .style('border-bottom', '1px solid #ddd')
-        .on('mouseover', function() {
-            d3.select(this).style('background-color', '#e1e1e1');
-        })
-        .on('mouseout', function() {
-            d3.select(this).style('background-color', 'white');
-        });
-
-    // Re-populate cells
-    rows.append('td').text(d => d.name).style('padding', '10px')
-        .style('color', '#ffcc00')  // Color to indicate it's clickable
-        .style('cursor', 'pointer')  // Indicate clickable
-        .on('click', function(event, d) {
-            fetchScreenshot(d.id);  // Fetch screenshot on click
-        });
-    -
-    rows.append('td').text(d => new Date(d.released).toLocaleDateString()).style('padding', '10px');
-    rows.append('td').text(d => d.platforms ? d.platforms.map(p => p.platform.name).join(', ') : 'N/A').style('padding', '10px');
-    rows.append('td').text(d => d.metacritic || 'N/A').style('padding', '10px');
-    rows.append('td').text(d => d.genres ? d.genres.map(g => g.name).join(', ') : 'N/A').style('padding', '10px');
+    displayGames(sortedData);
 }
 
-
-// Fetch and display games when the page loads
+// Initial data fetch on load
 document.addEventListener('DOMContentLoaded', fetchGames);
-
-
-
 
 
 const year2024 = '2024';
@@ -436,3 +391,202 @@ function toggleLine(selector) {
 
 // Fetch the tags and then fetch the games based on those tags
 document.addEventListener('DOMContentLoaded', fetchTags);
+
+
+// FinalBubbleArt
+document.addEventListener('DOMContentLoaded', async () => {
+    const genres = ['Stealth', 'RPG', 'Shooter']; // Updated to include Shooter
+    const startYear = 2019;
+    const endYear = 2024;
+
+    try {
+        const genreData = await fetchGenreData(apiKey, genres, startYear, endYear);
+        drawBubbleChart(genreData);
+    } catch (error) {
+        console.error("Error fetching or processing data:", error);
+    }
+});
+
+// Fetch genre data with popularity and release information
+async function fetchGenreData(apiKey, genres, startYear, endYear) {
+    const genrePromises = genres.map(async (genre) => {
+        // Fetch genre tag information
+        const tagUrl = `https://api.rawg.io/api/tags?key=${apiKey}&search=${encodeURIComponent(genre)}`;
+        const tagResponse = await fetch(tagUrl);
+        const tagData = await tagResponse.json();
+        const genreTag = tagData.results.find(tag => tag.name.toLowerCase() === genre.toLowerCase());
+
+        if (!genreTag) {
+            console.warn(`Genre ${genre} not found`);
+            return null;
+        }
+
+        // Fetch games by genre and filter by year
+        const gamesUrl = `https://api.rawg.io/api/games?key=${apiKey}&tags=${genreTag.id}&dates=${startYear}-01-01,${endYear}-12-31&page_size=100`;
+        const gamesResponse = await fetch(gamesUrl);
+        const gamesData = await gamesResponse.json();
+        
+        return gamesData.results.map(game => ({
+            id: game.id, // Capture the game ID for further details
+            name: game.name,
+            genre: genre,
+            releaseYear: new Date(game.released).getFullYear(),
+            popularity: game.metacritic || 50, // Use Metacritic as popularity; default to 50 if missing
+        }));
+    });
+
+    // Process each genre's games into a combined array
+    const genreData = (await Promise.all(genrePromises)).flat().filter(Boolean);
+    return genreData;
+}
+
+// Draw the D3 Bubble Chart with genre data
+function drawBubbleChart(data) {
+    const width = 800, height = 600;
+    const svg = d3.select("#bubbleChart").append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .style("background-color", "#2e2e2e");
+
+    // Color scale for genres
+    const colorScale = d3.scaleOrdinal()
+        .domain([...new Set(data.map(d => d.genre))])  // Unique genres
+        .range(["#ffcc00", "#ff6666", "#66b2ff", "#99ff66"]);
+
+    // Scale bubbles based on popularity
+    const radiusScale = d3.scaleSqrt()
+        .domain([d3.min(data, d => d.popularity), d3.max(data, d => d.popularity)])
+        .range([10, 50]);
+
+    // Tooltip for game details
+    const tooltip = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("position", "absolute")
+        .style("padding", "8px")
+        .style("background", "#444")
+        .style("border-radius", "8px")
+        .style("color", "white")
+        .style("opacity", 0);
+
+    // Bind data and draw bubbles
+    const bubbles = svg.selectAll("circle")
+        .data(data)
+        .enter().append("circle")
+        .attr("cx", d => Math.random() * width)
+        .attr("cy", d => Math.random() * height)
+        .attr("r", d => radiusScale(d.popularity))
+        .style("fill", d => colorScale(d.genre))
+        .style("opacity", 0.8)
+        .on("mouseover", (event, d) => {
+            tooltip.transition().duration(200).style("opacity", 0.9);
+            tooltip.html(`<strong>${d.name}</strong><br/>Genre: ${d.genre}<br/>Rating: ${d.popularity}<br/>Year: ${d.releaseYear}`)
+                .style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY - 28) + "px");
+
+            // Enlarge the hovered bubble
+            d3.select(event.currentTarget)
+                .transition()
+                .duration(200)
+                .attr("r", radiusScale(d.popularity) * 1.5); // Increase size by 50%
+        })
+        .on("mouseout", (event, d) => {
+            tooltip.transition().duration(500).style("opacity", 0);
+            // Reset size of the bubble on mouseout
+            d3.select(event.currentTarget)
+                .transition()
+                .duration(200)
+                .attr("r", radiusScale(d.popularity)); // Reset to original size
+        });
+
+    // Click event to open modal with detailed game info
+    bubbles.on("click", async (event, d) => {
+        const gameDetails = await fetchGameDetails(d.id);
+        showModal(gameDetails);
+    });
+
+    // Add legend for genres
+    const legend = svg.selectAll(".legend")
+        .data(colorScale.domain())
+        .enter().append("g")
+        .attr("class", "legend")
+        .attr("transform", (d, i) => `translate(20,${20 + i * 30})`);
+
+    legend.append("rect")
+        .attr("x", width - 150)
+        .attr("width", 20)
+        .attr("height", 20)
+        .style("fill", colorScale);
+
+    legend.append("text")
+        .attr("x", width - 120)
+        .attr("y", 15)
+        .style("fill", "#ffffff")
+        .text(d => d);
+
+    // Force simulation for bubble placement
+    const simulation = d3.forceSimulation(data)
+        .force("x", d3.forceX(width / 2).strength(0.05))
+        .force("y", d3.forceY(height / 2).strength(0.05))
+        .force("charge", d3.forceManyBody().strength(-50))
+        .force("collision", d3.forceCollide(d => radiusScale(d.popularity)))
+        .on("tick", () => {
+            bubbles.attr("cx", d => d.x)
+                .attr("cy", d => d.y);
+        });
+
+    // Dropdown for filtering genres
+    d3.select("#bubbleChart").insert("select", "svg")
+        .attr("id", "genreFilter")
+        .selectAll("option")
+        .data(["All", ...colorScale.domain()])
+        .enter().append("option")
+        .text(d => d)
+        .on("change", function() {
+            const selectedGenre = this.value;
+            bubbles.transition().duration(500)
+                .style("opacity", d => (selectedGenre === "All" || d.genre === selectedGenre) ? 0.8 : 0);
+        });
+}
+
+// Fetch additional game details including developer and tags
+async function fetchGameDetails(gameId) {
+    try {
+        const gameUrl = `https://api.rawg.io/api/games/${gameId}?key=${apiKey}`;
+        const gameResponse = await fetch(gameUrl);
+        const gameData = await gameResponse.json();
+
+        // Extract relevant data
+        const gameInfo = {
+            name: gameData.name,
+            genre: gameData.genres.map(genre => genre.name).join(', '), // Join genres as a string
+            tags: gameData.tags.map(tag => tag.name).join(', '), // Join tags as a string
+            developer: gameData.developers.map(dev => dev.name).join(', ') // Join developers as a string
+        };
+
+        return gameInfo;
+    } catch (error) {
+        console.error(`Error fetching details for game ID ${gameId}:`, error);
+        return null;
+    }
+}
+
+// Show modal with detailed game information
+function showModal(gameDetails) {
+    const modal = d3.select("#modal");
+    if (!gameDetails) {
+        modal.select(".modal-content").html("<p>Error loading game details.</p>");
+    } else {
+        modal.select(".modal-content").html(`
+            <h2>${gameDetails.name}</h2>
+            <p><strong>Genre:</strong> ${gameDetails.genre}</p>
+            <p><strong>Tags:</strong> ${gameDetails.tags}</p>
+            <p><strong>Developer:</strong> ${gameDetails.developer}</p>
+        `);
+    }
+    modal.style("display", "block");
+}
+
+// Close modal on click
+d3.select("#modal").on("click", () => {
+    d3.select("#modal").style("display", "none");
+});

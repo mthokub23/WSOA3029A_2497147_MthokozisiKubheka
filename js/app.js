@@ -9,39 +9,15 @@ document.addEventListener('DOMContentLoaded', () => {
         { title: "Design", url: `${baseUrl}/pages/design/design.html` }
     ];
 
-    addLogoToNavBar(baseUrl);
-    generateNavBar(navItems);
+    generateNavBar(navItems, baseUrl);
     handleBackToTopButton();
-    const page = document.body.dataset.page; // Assuming data-page is set on the body, as set for theory and design
+    const page = document.body.dataset.page;
     generateSidebar(page);
     setupImageModal();
 });
 
-// Function to add logo to navbar
-function addLogoToNavBar(baseUrl) {
-    const navBar = document.querySelector('.navbar');
-    if (!navBar) {
-        console.error('Navbar element not found');
-        return;
-    }
-
-    // Create image element for the logo
-    const logo = document.createElement('img');
-    logo.src = `${baseUrl}/assets/images/logo.png`; 
-    logo.alt = "Company Logo";
-    logo.classList.add('logo'); // Optional: Add a CSS class for additional styling
-
-    // Wrap logo in a link to the homepage
-    const logoLink = document.createElement('a');
-    logoLink.href = `${baseUrl}/index.html`;
-    logoLink.appendChild(logo);
-
-    // Insert the logo link at the start of the navbar
-    navBar.insertBefore(logoLink, navBar.firstChild);
-}
-
 // Generate the navigation bar
-function generateNavBar(navItems) {
+function generateNavBar(navItems, baseUrl) {
     const navBar = document.querySelector('.navbar ul');
     if (!navBar) {
         console.error('Navbar element not found');
@@ -49,8 +25,7 @@ function generateNavBar(navItems) {
     }
 
     navItems.forEach(item => {
-        console.log('Creating nav item:', item);
-        const listItem = createNavItem(item);
+        const listItem = createNavItem(item, baseUrl);
         navBar.appendChild(listItem);
     });
 
@@ -58,14 +33,27 @@ function generateNavBar(navItems) {
 }
 
 // Create a navigation item
-function createNavItem({ title, url }) {
+function createNavItem({ title, url }, baseUrl) {
     const listItem = document.createElement('li');
     const link = document.createElement('a');
     link.href = url;
-    link.textContent = title;
+
+    if (title === "Home") {
+        // Create logo image for Home button
+        const logo = document.createElement('img');
+        logo.src = `${baseUrl}/assets/images/logo.png`;
+        logo.alt = "GameDex Logo";
+        logo.classList.add('logo');
+        link.appendChild(logo);
+    } else {
+        // For other nav items, just add the title
+        link.textContent = title;
+    }
+
     listItem.appendChild(link);
     return listItem;
 }
+
 
 // Handle Back to Top button visibility and functionality
 function handleBackToTopButton() {
@@ -172,37 +160,23 @@ const sidebars = {
 };
 
 
-// Carousel functionality
-let slideIndex = 1;
+//image container
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('wireframe-modal');
+    const modalImg = document.getElementById('modal-image');
+    const captionText = document.getElementById('caption');
+    const cards = document.querySelectorAll('.card');
 
-function setupCarousel() {
-    showSlides(slideIndex);
-
-    document.querySelector('.prev').addEventListener('click', () => changeSlide(-1));
-    document.querySelector('.next').addEventListener('click', () => changeSlide(1));
-    document.querySelectorAll('.dot').forEach((dot, index) => {
-        dot.addEventListener('click', () => currentSlide(index + 1));
+    cards.forEach(card => {
+        card.addEventListener('click', function() {
+            modal.style.display = 'block';
+            modalImg.src = this.getAttribute('data-image');
+            captionText.innerHTML = this.querySelector('p').innerText;
+        });
     });
-}
 
-function changeSlide(n) {
-    showSlides(slideIndex += n);
-}
-
-function currentSlide(n) {
-    showSlides(slideIndex = n);
-}
-
-function showSlides(n) {
-    const slides = document.querySelectorAll('.carousel-slide img');
-    const dots = document.querySelectorAll('.dot');
-
-    if (n > slides.length) { slideIndex = 1 }
-    if (n < 1) { slideIndex = slides.length }
-
-    slides.forEach(slide => slide.style.display = 'none');
-    dots.forEach(dot => dot.className = dot.className.replace(' active', ''));
-
-    slides[slideIndex - 1].style.display = 'block';
-    dots[slideIndex - 1].className += ' active';
-}
+    const span = document.getElementsByClassName('close')[0];
+    span.onclick = function() {
+        modal.style.display = 'none';
+    }
+});
