@@ -723,3 +723,40 @@ main a:hover, main a:focus {
     max-height: 80%;
   }
 }
+
+* References Section */
+references {
+  background-color: #2e2e2e;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  max-width: 800px;
+  color: #ffffff; 
+}
+
+references h2 {
+  color:#ffcc00; 
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+references ul {
+  list-style-type: none; 
+  padding: 0;
+}
+
+references li {
+  margin-bottom: 10px;
+  font-size: 1em;
+}
+
+references a {
+  color: #ffffff; 
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+references a:hover {
+  color: #000000; 
+}
