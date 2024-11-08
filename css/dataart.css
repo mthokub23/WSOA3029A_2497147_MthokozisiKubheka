@@ -1,19 +1,4 @@
-/* Graph for Games */
-.graph {
-    margin: 20px;
-    padding: 20px;
-    background-color: #2e2e2e; 
-    border-radius: 8px;
-    color: #ffffff; 
-  }
-  
-  .table-wrapper {
-    overflow-x: auto; /* Enables horizontal scrolling */
-    margin: 20px auto; /* Center the wrapper */
-  }
-  
 
- 
   
   /* Media Queries for Responsive Design */
   @media (max-width: 768px) {
@@ -162,6 +147,23 @@
 /*Graph*/
 
 /* SVG Container */
+
+/* Graph for Games */
+.graph {
+  margin: 20px;
+  padding: 20px;
+  background-color: #2e2e2e; 
+  border-radius: 8px;
+  color: #ffffff; 
+}
+
+.table-wrapper {
+  overflow-x: auto; /* Enables horizontal scrolling */
+  margin: 20px auto; /* Center the wrapper */
+}
+
+
+
 .graph svg {
     
     border: 1px solid #ddd; /* Subtle border for definition */
@@ -224,15 +226,78 @@
 }
 
 .filter-buttons button:hover {
-    background-color: #e6b800; /* Slightly darker on hover */
-    transform: translateY(-2px); /* Slight lift on hover */
+    background-color: #e6b800;
+    transform: translateY(-2px); 
 }
 
 .filter-buttons button:active {
-    background-color: #cc9900; /* Even darker when clicked */
-    transform: translateY(0); /* Reset lift when clicked */
+    background-color: #cc9900; 
+    transform: translateY(0); 
 }
 
+/* Date Range Filter Styles */
+.date-range-filter {
+  background-color: #2c2a2a;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 10px auto;
+  max-width: 800px; /* Reduced max-width for a smaller layout */
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Space between elements */
+}
+
+.date-range-filter h3 {
+  font-size: 1.2em; /* Reduced font size */
+  margin: 0 10px 0 0; /* Reduced margin for tighter layout */
+  color: #333;
+}
+
+.date-range-filter label {
+  margin: 0 5px; /* Reduced margin for tighter layout */
+  font-weight: bold;
+  color:#e6b800;
+}
+
+.date-range-filter input[type="date"] {
+  width: auto; /* Auto width for inline layout */
+  padding: 5px;
+  margin: 0 5px; /* Reduced margin for tighter layout */
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1em;
+  color: #000000;
+}
+
+
+.date-range-filter h3 {
+  font-size: 1.2em; 
+  margin: 0 10px 0 0; 
+  color: #ffffff;
+}
+
+
+.date-range-filter button {
+  background-color: #ffcc00;
+  color: #333;
+  border: none;
+  padding: 5px 10px;
+  font-size: 1em;
+  cursor: pointer;
+  border-radius: 5px;
+  margin: 0 5px; 
+  transition: background-color 0.3s;
+}
+
+.date-range-filter button:hover {
+  background-color: #e6b800;
+  color: #000;
+  transform: scale(1.1);
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
 
 /* Bubble Chart */
 #bubbleChart {
@@ -402,3 +467,4 @@ circle:hover {
 #gameDataTable tbody td[title]:hover::after {
   opacity: 1; /* Show tooltip on hover */
 }
+

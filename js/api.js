@@ -13,9 +13,23 @@ const gamesList = [
 
 let sortAscending = true; // Track the sort order for each column
 
-// Initial Game Data Fetching and Display
+
+function showLoading() {
+    document.getElementById('loadingMessage').style.display = 'block';
+    document.getElementById('gamesTable').style.display = 'none';
+}
+
+// Hide the loading message and show the data table
+function hideLoading() {
+    document.getElementById('loadingMessage').style.display = 'none';
+    document.getElementById('gamesTable').style.display = 'block';
+}
+
+
+// Initial Game Data Fetching and Display with Loading Indicator
 async function fetchGames() {
     try {
+        showLoading(); // Show loading message when fetching starts
         const gamesData = [];
         
         for (const gameName of gamesList) {
@@ -38,6 +52,8 @@ async function fetchGames() {
         }
     } catch (error) {
         console.error('Error fetching games:', error);
+    } finally {
+        hideLoading(); // Hide loading message once fetching is complete
     }
 }
 
@@ -184,11 +200,11 @@ function showDefaultImage() {
 document.addEventListener('DOMContentLoaded', fetchGames);
 
 
-//Graph for Stealth vs RPG
+// Graph for Stealth vs RPG
 const year2024 = '2024';
 
 // 1. Fetch the list of tags and find the ID for the "stealth" and "RPG" tags
-async function fetchTags() {
+async function fetchTags(startDate = `${year2024}-01-01`, endDate = `${year2024}-12-31`) {
     try {
         const tagUrl = `https://api.rawg.io/api/tags?key=${apiKey}&page_size=100`;
         const response = await fetch(tagUrl);
@@ -200,7 +216,7 @@ async function fetchTags() {
         
         if (stealthTag && rpgTag) {
             console.log(`Tags found: Stealth ID ${stealthTag.id}, RPG ID ${rpgTag.id}`);
-            fetchGamesByTags(stealthTag.id, rpgTag.id);
+            fetchGamesByTags(stealthTag.id, rpgTag.id, startDate, endDate);
         } else {
             console.error('Stealth or RPG tag not found.');
         }
@@ -209,10 +225,10 @@ async function fetchTags() {
     }
 }
 
-// 2. Fetch games with the "stealth" and "RPG" tags released in 2024
-async function fetchGamesByTags(stealthTagId, rpgTagId) {
+// 2. Fetch games with the "stealth" and "RPG" tags released in the specified date range
+async function fetchGamesByTags(stealthTagId, rpgTagId, startDate, endDate) {
     try {
-        const gamesUrl = `https://api.rawg.io/api/games?key=${apiKey}&dates=${year2024}-01-01,${year2024}-12-31&tags=${stealthTagId},${rpgTagId}&page_size=100`;
+        const gamesUrl = `https://api.rawg.io/api/games?key=${apiKey}&dates=${startDate},${endDate}&tags=${stealthTagId},${rpgTagId}&page_size=100`;
         const response = await fetch(gamesUrl);
         const data = await response.json();
         
@@ -221,29 +237,29 @@ async function fetchGamesByTags(stealthTagId, rpgTagId) {
             const stealthGames = data.results.filter(game => game.tags.some(tag => tag.id === stealthTagId));
             const rpgGames = data.results.filter(game => game.tags.some(tag => tag.id === rpgTagId));
 
-            const stealthData = countGamesByMonth(stealthGames);
-            const rpgData = countGamesByMonth(rpgGames);
+            const stealthData = countGamesByMonth(stealthGames, startDate, endDate);
+            const rpgData = countGamesByMonth(rpgGames, startDate, endDate);
 
             // Draw the graph with both stealth and RPG data
-            drawInteractiveLineGraph(stealthData, rpgData);
+            drawInteractiveLineGraph(stealthData, rpgData, startDate, endDate);
         } else {
-            console.error('No stealth or RPG games found for 2024.');
+            console.error('No stealth or RPG games found for the selected date range.');
         }
     } catch (error) {
         console.error('Error fetching games:', error);
     }
 }
 
-// 3. Count number of games released each month
-function countGamesByMonth(games) {
+// 3. Count number of games released each month within the specified date range
+function countGamesByMonth(games, startDate, endDate) {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
     const monthlyCount = Array(12).fill(0); // Array to hold counts for each month
 
     games.forEach(game => {
         const releaseDate = new Date(game.released);
-        const month = releaseDate.getMonth(); // Get month (0-11)
-        
-        // Increment the count for the corresponding month
-        if (releaseDate.getFullYear() === 2024) {
+        if (releaseDate >= start && releaseDate <= end) {
+            const month = releaseDate.getMonth(); // Get month (0-11)
             monthlyCount[month]++;
         }
     });
@@ -252,9 +268,12 @@ function countGamesByMonth(games) {
 }
 
 // 4. Draw the line graph with interactivity and filtering options
-function drawInteractiveLineGraph(stealthData, rpgData) {
+function drawInteractiveLineGraph(stealthData, rpgData, startDate, endDate) {
     const svgWidth = 600, svgHeight = 400;
     const margin = { top: 20, right: 30, bottom: 40, left: 40 };
+
+    // Clear any existing SVG
+    d3.select('.graph').selectAll('*').remove();
 
     // Create SVG container
     const svg = d3.select('.graph').append('svg')
@@ -263,7 +282,7 @@ function drawInteractiveLineGraph(stealthData, rpgData) {
 
     // Define scales
     const xScale = d3.scaleBand()
-        .domain(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+        .domain(getMonthsInRange(startDate, endDate))
         .range([margin.left, svgWidth - margin.right])
         .padding(0.1);
 
@@ -283,12 +302,12 @@ function drawInteractiveLineGraph(stealthData, rpgData) {
 
     // Define the line generator for Stealth games
     const stealthLine = d3.line()
-        .x((d, i) => xScale(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i]) + xScale.bandwidth() / 2)
+        .x((d, i) => xScale(getMonthsInRange(startDate, endDate)[i]) + xScale.bandwidth() / 2)
         .y(d => yScale(d));
 
     // Define the line generator for RPG games
     const rpgLine = d3.line()
-        .x((d, i) => xScale(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i]) + xScale.bandwidth() / 2)
+        .x((d, i) => xScale(getMonthsInRange(startDate, endDate)[i]) + xScale.bandwidth() / 2)
         .y(d => yScale(d));
 
     // Append Stealth line
@@ -296,7 +315,7 @@ function drawInteractiveLineGraph(stealthData, rpgData) {
         .datum(stealthData)
         .attr('class', 'stealth-line') // Add a class for filtering
         .attr('fill', 'none')
-        .attr('stroke', '#ff0000') // Red for Stealth
+        .attr('stroke', '#ffcc00') // Bright yellow for Stealth to match the site's color palette
         .attr('stroke-width', 2)
         .attr('d', stealthLine);
 
@@ -305,15 +324,15 @@ function drawInteractiveLineGraph(stealthData, rpgData) {
         .datum(rpgData)
         .attr('class', 'rpg-line') // Add a class for filtering
         .attr('fill', 'none')
-        .attr('stroke', '#0000ff') // Blue for RPG
+        .attr('stroke', '#2e2e2e') // Medium grey for RPG to match the site's color palette
         .attr('stroke-width', 2)
         .attr('d', rpgLine);
 
     // Add points for Stealth line
-    addPoints(svg, stealthData, xScale, yScale, '#ff0000', 'Stealth');
+    addPoints(svg, stealthData, xScale, yScale, '#ffcc00', 'Stealth', startDate, endDate);
 
     // Add points for RPG line
-    addPoints(svg, rpgData, xScale, yScale, '#0000ff', 'RPG');
+    addPoints(svg, rpgData, xScale, yScale, '#2e2e2e', 'RPG', startDate, endDate);
 
     // Tooltip for hover effect (GLOBAL)
     const tooltip = d3.select('body').append('div')
@@ -329,18 +348,21 @@ function drawInteractiveLineGraph(stealthData, rpgData) {
 
     // Filter buttons for toggling lines
     const filters = d3.select('.graph').append('div').attr('class', 'filter-buttons');
-    filters.append('button').text('Show Stealth').on('click', () => toggleLine('.stealth-line'));
-    filters.append('button').text('Show RPG').on('click', () => toggleLine('.rpg-line'));
-    filters.append('button').text('Show Both').on('click', () => toggleLine('.stealth-line, .rpg-line'));
+    filters.append('button').text('Hide Stealth').on('click', () => toggleLine('.stealth-line, .dot-Stealth'));
+    filters.append('button').text('Hide RPG').on('click', () => toggleLine('.rpg-line, .dot-RPG'));
+    filters.append('button').text('Show Both').on('click', () => {
+        d3.selectAll('.stealth-line, .dot-Stealth').style('display', 'block');
+        d3.selectAll('.rpg-line, .dot-RPG').style('display', 'block');
+    });
 }
 
 // Add interactive points to the graph
-function addPoints(svg, data, xScale, yScale, color, label) {
+function addPoints(svg, data, xScale, yScale, color, label, startDate, endDate) {
     svg.selectAll(`.dot-${label}`)
         .data(data)
         .enter().append('circle')
         .attr('class', `dot-${label}`)
-        .attr('cx', (d, i) => xScale(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i]) + xScale.bandwidth() / 2)
+        .attr('cx', (d, i) => xScale(getMonthsInRange(startDate, endDate)[i]) + xScale.bandwidth() / 2)
         .attr('cy', d => yScale(d))
         .attr('r', 5)
         .attr('fill', color)
@@ -363,17 +385,51 @@ function addPoints(svg, data, xScale, yScale, color, label) {
         });
 }
 
-// Function to toggle the visibility of lines
+// Function to toggle the visibility of lines and dots
 function toggleLine(selector) {
-    const lines = d3.selectAll(selector);
-    lines.style('display', lines.style('display') === 'none' ? 'block' : 'none');
+    const elements = d3.selectAll(selector);
+    elements.style('display', elements.style('display') === 'none' ? 'block' : 'none');
+}
+
+// Helper function to get months in the selected date range
+function getMonthsInRange(startDate, endDate) {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const months = [];
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    for (let date = new Date(start); date <= end; date.setMonth(date.getMonth() + 1)) {
+        months.push(monthNames[date.getMonth()]);
+    }
+
+    return months;
 }
 
 // Fetch the tags and then fetch the games based on those tags
-document.addEventListener('DOMContentLoaded', fetchTags);
+document.addEventListener('DOMContentLoaded', () => {
+    fetchTags();
+
+    // Add event listener to the filter button
+    document.getElementById('filterButton').addEventListener('click', () => {
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+        if (startDate && endDate) {
+            fetchTags(startDate, endDate);
+        } else {
+            alert('Please select both start and end dates.');
+        }
+    });
+
+    // Add event listener to the reset button
+    document.getElementById('resetButton').addEventListener('click', () => {
+        document.getElementById('startDate').value = '';
+        document.getElementById('endDate').value = '';
+        fetchTags(); // Reset to default date range
+    });
+});
 
 
-// FinalBubbleArt
+//Bubble Chart Functions
 document.addEventListener('DOMContentLoaded', async () => {
     const genres = ['Stealth', 'RPG', 'Shooter']; // Updated to include Shooter
     const startYear = 2019;
@@ -570,3 +626,7 @@ function showModal(gameDetails) {
 d3.select("#modal").on("click", () => {
     d3.select("#modal").style("display", "none");
 });
+
+
+
+

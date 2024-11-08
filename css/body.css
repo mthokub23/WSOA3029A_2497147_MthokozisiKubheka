@@ -39,6 +39,14 @@ body {
   vertical-align: left;
 }
 
+.navbar a.active {
+    background-color: #ffcc00; /* Bright background to highlight */
+    color: #1e1e1e; /* Dark text for contrast */
+    border-radius: 4px;
+    padding: 8px 12px;
+    transition: background-color 0.3s ease;
+}
+
 .navbar .logo img {
   max-height: 50px; /* Adjust the height as needed */
   width: auto; /* Maintain aspect ratio */
@@ -48,6 +56,7 @@ body {
 .navbar .logo img:hover {
   transform: scale(1.1); /* Slightly enlarge on hover */
 }
+
 .navbar.scrolled {
   background-color: rgba(51, 51, 51, 0.5); 
 }

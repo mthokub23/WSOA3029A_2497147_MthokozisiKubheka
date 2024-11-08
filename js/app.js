@@ -72,44 +72,7 @@ function handleBackToTopButton() {
     });
 }
 
-// Generate the sidebar based on the page type
-function generateSidebar(page) {
-    const sidebarContent = sidebars[page];
-    if (!sidebarContent) return;
 
-    const sidebar = document.createElement('aside');
-    sidebar.className = 'sidebar';
-    const nav = document.createElement('nav');
-    const ul = document.createElement('ul');
-
-    sidebarContent.forEach(item => {
-        const li = createSidebarItem(item);
-        ul.appendChild(li);
-    });
-
-    nav.appendChild(ul);
-    sidebar.appendChild(nav);
-    document.body.appendChild(sidebar);
-}
-
-// Create a sidebar item
-function createSidebarItem({ id, text }) {
-    const li = document.createElement('li');
-    const a = document.createElement('a');
-    a.href = 'javascript:void(0);';
-    a.textContent = text;
-    a.onclick = () => showSection(id);
-    li.appendChild(a);
-    return li;
-}
-
-// Show the selected section and hide others
-function showSection(sectionId) {
-    document.querySelectorAll('article').forEach(section => {
-        section.style.display = 'none';
-    });
-    document.getElementById(sectionId).style.display = 'block';
-}
 
 // Set up modal for interactive images
 function setupImageModal() {
@@ -155,12 +118,52 @@ const sidebars = {
     ],
     theory: [
         { id: 'essay', text: 'Essay' },
-        { id: 'weeklyupdates', text: 'Weekly Updates' }
+        { id: 'weeklyupdates', text: 'Weekly Updates' },
+        { id: 'essay2', text: 'Essay 2' } // Ensure this matches the HTML id
     ]
 };
 
+// Generate the sidebar based on the page type
+function generateSidebar(page) {
+    const sidebarContent = sidebars[page];
+    if (!sidebarContent) return;
 
-//image container
+    const sidebar = document.createElement('aside');
+    sidebar.className = 'sidebar';
+    const nav = document.createElement('nav');
+    const ul = document.createElement('ul');
+
+    sidebarContent.forEach(item => {
+        const li = createSidebarItem(item);
+        ul.appendChild(li);
+    });
+
+    nav.appendChild(ul);
+    sidebar.appendChild(nav);
+    document.body.appendChild(sidebar);
+}
+
+// Create a sidebar item
+function createSidebarItem({ id, text }) {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = 'javascript:void(0);';
+    a.textContent = text;
+    a.onclick = () => showSection(id);
+    li.appendChild(a);
+    return li;
+}
+
+// Show the selected section and hide others
+function showSection(sectionId) {
+    document.querySelectorAll('article').forEach(section => {
+        section.style.display = 'none';
+    });
+    document.getElementById(sectionId).style.display = 'block';
+}
+
+
+// Image container
 document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('wireframe-modal');
     const modalImg = document.getElementById('modal-image');
@@ -169,9 +172,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     cards.forEach(card => {
         card.addEventListener('click', function() {
-            modal.style.display = 'block';
-            modalImg.src = this.getAttribute('data-image');
-            captionText.innerHTML = this.querySelector('p').innerText;
+            modal.style.display = 'flex';
+            const img = this.querySelector('img');
+            modalImg.src = img.src;
+            captionText.innerHTML = this.querySelector('figcaption').innerText;
         });
     });
 
@@ -179,4 +183,10 @@ document.addEventListener('DOMContentLoaded', function() {
     span.onclick = function() {
         modal.style.display = 'none';
     }
+
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
 });

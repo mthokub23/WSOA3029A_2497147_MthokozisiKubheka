@@ -2,7 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="keywords" content="GameDex, data art, stealth games, game analysis, game data visualization">
+    <meta name="author" content="GameDex">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Game Dex Data Art">
+    <meta property="og:description" content="An analysis of the decline of stealth games using data visualization.">
+
+    <meta property="og:image" content="../../assets/images/OG-image.png"> 
+    <meta property="og:url" content="https://mthokub23.github.io/WSOA3029A_2497147_MthokozisiKubheka/pages/dataart/dataart.html">
+    <meta property="og:type" content="website">
+    
     <title>Game Dex Data Art</title>
   
     <link rel="stylesheet" href="../../css/body.css">
@@ -24,6 +34,11 @@
         
         
         <section class="Content">
+
+            <section id="loadingMessage" style="text-align: center; margin-top: 20px;">
+                <p>Loading data, please wait...</p>
+            </section>
+
                 <article>
                 <H2>The Death of stealth games</H2>
             
@@ -39,13 +54,17 @@
 
 
         <section class="Data Art">
-            <table id="gamesTable">
+            <table id="gamesTable" style="display: none;">
                 
             </table>
+
         </section>
 
         <article>
+
+            <p>
             Now, some of the releases, are actually DLC or remasters/remakes of older games, so their release dates will be before the minimum release of 2024. This is of no relevance however. 
+            </p>
         </article>
 
         <section class="screenshot">
@@ -57,19 +76,36 @@
         <section class="Content">
 
             <article>
-                <P>These are some high quality games. But the most interesting point here, with the context of my research is the lack there of, of stealth games within the biggest games of the year. Not even 1</P>
-                <P>While I agree with the fact that the genre, has always been relatively niche, it's been increasingly fading however.  </P>
+                <P>These are some high quality games. But the most interesting point here, with the context of my research is the lack there of, of stealth games within the biggest games of the year. Not even 1
+                While I agree with the fact that the genre, has always been relatively niche, it's been increasingly fading however.  </P>
 
             </article>
         </section>
 
 
+
+
+        <section class="date-range-filter">
+            <h3>Filter by Date Range</h3>
+            <label for="startDate">Start Date:</label>
+            <input type="date" id="startDate" name="startDate">
+            <label for="endDate">End Date:</label>
+            <input type="date" id="endDate" name="endDate">
+            <button id="filterButton">Filter</button>
+            <button id="resetButton">Reset</button>
+        </section>
+
         <section class="graph">
             <h2>Stealth Games vs RPG released/to be released in 2024</h2>
             <section id="actionGamesGraph"></section> 
             
+        
+
+
+
         </section>
 
+       
 
         <article>
             <p>
@@ -107,13 +143,16 @@
                 </p>
     
                
-
                 <aside class="video-container">
                     <iframe 
+                        width="100%" 
+                        height="auto" 
                         src="https://www.youtube.com/embed/olAn5VN9Jl8" 
-                        title="Why Modern Games Take FOREVER To Make" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
+                        title="Why Modern Games Take FOREVER To Make - Video" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen 
+                        loading="lazy">
                     </iframe>
                 </aside>
 
